@@ -1,0 +1,20 @@
+
+input {
+    width: 35px;
+    height: 35px;
+    padding: 10px;
+    font-size: larger;
+}
+
+/* -------------------- Prevent show number input arrows -------------------- */
+
+ /* Remove default number input arrows */
+ input[type=number]::-webkit-inner-spin-button,
+ input[type=number]::-webkit-outer-spin-button {
+     -webkit-appearance: none;
+     margin: 0;
+ }
+ /* Remove number input arrow in Firefox */
+ input[type=number] {
+     -moz-appearance: textfield;
+ }
