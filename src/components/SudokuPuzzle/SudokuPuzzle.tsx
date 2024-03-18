@@ -51,26 +51,44 @@ function SudokuPuzzle() {
   /*                                    State                                   */
   /* -------------------------------------------------------------------------- */
 
+  /* ------------------------------ Square Group ------------------------------ */
   const [squareGroup1, setSquareGroup1] =
     useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup2, setSquareGroup2] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup3, setSquareGroup3] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup4, setSquareGroup4] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup5, setSquareGroup5] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup6, setSquareGroup6] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup7, setSquareGroup7] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup8, setSquareGroup8] =
+    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup9, setSquareGroup9] =
+    useState<TSquareGroup>(initialSquareGroup);
 
-  const [inputValue1, setInputValue1] =
+  /* ------------------------------ Input Value ------------------------------ */
+  const [inputValue11, setInputValue11] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue2, setInputValue2] =
+  const [inputValue12, setInputValue12] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue3, setInputValue3] =
+  const [inputValue13, setInputValue13] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue4, setInputValue4] =
+  const [inputValue14, setInputValue14] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue5, setInputValue5] =
+  const [inputValue15, setInputValue15] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue6, setInputValue6] =
+  const [inputValue16, setInputValue16] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue7, setInputValue7] =
+  const [inputValue17, setInputValue17] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue8, setInputValue8] =
+  const [inputValue18, setInputValue18] =
     useState<TInputValue>(initialInputValue);
-  const [inputValue9, setInputValue9] =
+  const [inputValue19, setInputValue19] =
     useState<TInputValue>(initialInputValue);
 
   /* -------------------------------------------------------------------------- */
@@ -82,38 +100,36 @@ function SudokuPuzzle() {
     inputId: number,
     inputGroupId: number
   ) {
-    console.log("inputGroupId", inputGroupId);
-
     let setInputValueFunction;
 
     // Set input state to function.
     switch (inputId) {
       case 1:
-        setInputValueFunction = setInputValue1;
+        setInputValueFunction = setInputValue11;
         break;
       case 2:
-        setInputValueFunction = setInputValue2;
+        setInputValueFunction = setInputValue12;
         break;
       case 3:
-        setInputValueFunction = setInputValue3;
+        setInputValueFunction = setInputValue13;
         break;
       case 4:
-        setInputValueFunction = setInputValue4;
+        setInputValueFunction = setInputValue14;
         break;
       case 5:
-        setInputValueFunction = setInputValue5;
+        setInputValueFunction = setInputValue15;
         break;
       case 6:
-        setInputValueFunction = setInputValue6;
+        setInputValueFunction = setInputValue16;
         break;
       case 7:
-        setInputValueFunction = setInputValue7;
+        setInputValueFunction = setInputValue17;
         break;
       case 8:
-        setInputValueFunction = setInputValue8;
+        setInputValueFunction = setInputValue18;
         break;
       case 9:
-        setInputValueFunction = setInputValue9;
+        setInputValueFunction = setInputValue19;
         break;
       default:
         // TODO: Change this
@@ -126,48 +142,98 @@ function SudokuPuzzle() {
       // isWrongAnswer: true,
     });
 
+    let setSquareGroupFunction;
+    let squareGroupObject: TSquareGroup;
+
+    switch (inputGroupId) {
+      case 1:
+        setSquareGroupFunction = setSquareGroup1;
+        squareGroupObject = squareGroup1;
+        break;
+      case 2:
+        setSquareGroupFunction = setSquareGroup2;
+        squareGroupObject = squareGroup2;
+        break;
+      case 3:
+        setSquareGroupFunction = setSquareGroup3;
+        squareGroupObject = squareGroup3;
+        break;
+      case 4:
+        setSquareGroupFunction = setSquareGroup4;
+        squareGroupObject = squareGroup4;
+        break;
+      case 5:
+        setSquareGroupFunction = setSquareGroup5;
+        squareGroupObject = squareGroup5;
+        break;
+      case 6:
+        setSquareGroupFunction = setSquareGroup6;
+        squareGroupObject = squareGroup6;
+        break;
+      case 7:
+        setSquareGroupFunction = setSquareGroup7;
+        squareGroupObject = squareGroup7;
+        break;
+      case 8:
+        setSquareGroupFunction = setSquareGroup8;
+        squareGroupObject = squareGroup8;
+        break;
+      case 9:
+        setSquareGroupFunction = setSquareGroup9;
+        squareGroupObject = squareGroup9;
+        break;
+      default:
+        // TODO: Change this
+        setSquareGroupFunction = () => {};
+        squareGroupObject = initialSquareGroup;
+        break;
+    }
+
     switch (value) {
       case "1":
-        if (!squareGroup1.one) setSquareGroup1({ ...squareGroup1, one: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+        if (!squareGroup1.one)
+          setSquareGroupFunction({ ...squareGroupObject, one: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "2":
-        if (!squareGroup1.two) setSquareGroup1({ ...squareGroup1, two: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+        if (!squareGroup1.two)
+          setSquareGroupFunction({ ...squareGroupObject, two: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "3":
         if (!squareGroup1.three)
-          setSquareGroup1({ ...squareGroup1, three: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+          setSquareGroupFunction({ ...squareGroupObject, three: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "4":
         if (!squareGroup1.four)
-          setSquareGroup1({ ...squareGroup1, four: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+          setSquareGroupFunction({ ...squareGroupObject, four: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "5":
         if (!squareGroup1.five)
-          setSquareGroup1({ ...squareGroup1, five: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+          setSquareGroupFunction({ ...squareGroupObject, five: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "6":
-        if (!squareGroup1.six) setSquareGroup1({ ...squareGroup1, six: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+        if (!squareGroup1.six)
+          setSquareGroupFunction({ ...squareGroupObject, six: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "7":
         if (!squareGroup1.seven)
-          setSquareGroup1({ ...squareGroup1, seven: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+          setSquareGroupFunction({ ...squareGroupObject, seven: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "8":
         if (!squareGroup1.eight)
-          setSquareGroup1({ ...squareGroup1, eight: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+          setSquareGroupFunction({ ...squareGroupObject, eight: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
       case "9":
         if (!squareGroup1.nine)
-          setSquareGroup1({ ...squareGroup1, nine: true });
-        else setInputValueFunction({ ...inputValue1, isWrongAnswer: true });
+          setSquareGroupFunction({ ...squareGroupObject, nine: true });
+        else setInputValueFunction({ ...inputValue11, isWrongAnswer: true });
         break;
     }
   }
@@ -177,60 +243,64 @@ function SudokuPuzzle() {
     console.log("squareList1", squareGroup1);
   }, [squareGroup1]);
 
+  useEffect(() => {
+    console.log("squareList2", squareGroup2);
+  }, [squareGroup2]);
+
   return (
     <Grid container width="320px" boxSizing="border-box">
       <Grid item xs={4} border="1px solid black">
         <input
-          className={inputValue1.isWrongAnswer ? "wrong-answer" : ""}
-          disabled={inputValue1.value !== ""}
+          className={inputValue11.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue11.value !== ""}
           onChange={(e) => handleAddNumber(e.target.value, 1, 1)}
           type="number"
         />
         <input
-          disabled={inputValue2.value !== ""}
-          className={inputValue2.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue12.value !== ""}
+          className={inputValue12.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 2, 1)}
           type="number"
         />
         <input
-          disabled={inputValue3.value !== ""}
-          className={inputValue3.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue13.value !== ""}
+          className={inputValue13.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 3, 1)}
           type="number"
         />
         <input
-          disabled={inputValue4.value !== ""}
-          className={inputValue4.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue14.value !== ""}
+          className={inputValue14.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 4, 1)}
           type="number"
         />
         <input
-          disabled={inputValue5.value !== ""}
-          className={inputValue5.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue15.value !== ""}
+          className={inputValue15.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 5, 1)}
           type="number"
         />
         <input
-          disabled={inputValue6.value !== ""}
-          className={inputValue6.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue16.value !== ""}
+          className={inputValue16.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 6, 1)}
           type="number"
         />
         <input
-          disabled={inputValue7.value !== ""}
-          className={inputValue7.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue17.value !== ""}
+          className={inputValue17.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 7, 1)}
           type="number"
         />
         <input
-          disabled={inputValue8.value !== ""}
-          className={inputValue8.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue18.value !== ""}
+          className={inputValue18.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 8, 1)}
           type="number"
         />
         <input
-          disabled={inputValue9.value !== ""}
-          className={inputValue9.isWrongAnswer ? "wrong-answer" : ""}
+          disabled={inputValue19.value !== ""}
+          className={inputValue19.isWrongAnswer ? "wrong-answer" : ""}
           onChange={(e) => handleAddNumber(e.target.value, 9, 1)}
           type="number"
         />
