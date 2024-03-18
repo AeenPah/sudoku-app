@@ -26,8 +26,15 @@ type TInputValue = {
   isWrongAnswer?: boolean;
 };
 
-type SetInputValueMap = {
+type TSetInputValueMap = {
   [key: number]: { [key: number]: Dispatch<SetStateAction<TInputValue>> };
+};
+
+type TSquareGroupMap = {
+  [key: number]: {
+    setSquareGroupFunction: Dispatch<SetStateAction<TSquareGroup>>;
+    squareGroupObject: TSquareGroup;
+  };
 };
 
 /* -------------------------------------------------------------------------- */
@@ -121,7 +128,7 @@ function SudokuPuzzle() {
   /*                                    Data                                    */
   /* -------------------------------------------------------------------------- */
 
-  const setInputValueMap: SetInputValueMap = {
+  const setInputValueMap: TSetInputValueMap = {
     1: {
       1: setInputValue11,
       2: setInputValue12,
@@ -145,6 +152,46 @@ function SudokuPuzzle() {
       9: setInputValue29,
     },
   };
+
+  const squareGroupMap: TSquareGroupMap = {
+    1: {
+      setSquareGroupFunction: setSquareGroup1,
+      squareGroupObject: squareGroup1,
+    },
+    2: {
+      setSquareGroupFunction: setSquareGroup2,
+      squareGroupObject: squareGroup2,
+    },
+    3: {
+      setSquareGroupFunction: setSquareGroup3,
+      squareGroupObject: squareGroup3,
+    },
+    4: {
+      setSquareGroupFunction: setSquareGroup4,
+      squareGroupObject: squareGroup4,
+    },
+    5: {
+      setSquareGroupFunction: setSquareGroup5,
+      squareGroupObject: squareGroup5,
+    },
+    6: {
+      setSquareGroupFunction: setSquareGroup6,
+      squareGroupObject: squareGroup6,
+    },
+    7: {
+      setSquareGroupFunction: setSquareGroup7,
+      squareGroupObject: squareGroup7,
+    },
+    8: {
+      setSquareGroupFunction: setSquareGroup8,
+      squareGroupObject: squareGroup8,
+    },
+    9: {
+      setSquareGroupFunction: setSquareGroup9,
+      squareGroupObject: squareGroup9,
+    },
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
@@ -160,52 +207,9 @@ function SudokuPuzzle() {
       value: value,
     });
 
-    let setSquareGroupFunction;
-    let squareGroupObject: TSquareGroup;
-
-    switch (inputGroupId) {
-      case 1:
-        setSquareGroupFunction = setSquareGroup1;
-        squareGroupObject = squareGroup1;
-        break;
-      case 2:
-        setSquareGroupFunction = setSquareGroup2;
-        squareGroupObject = squareGroup2;
-        break;
-      case 3:
-        setSquareGroupFunction = setSquareGroup3;
-        squareGroupObject = squareGroup3;
-        break;
-      case 4:
-        setSquareGroupFunction = setSquareGroup4;
-        squareGroupObject = squareGroup4;
-        break;
-      case 5:
-        setSquareGroupFunction = setSquareGroup5;
-        squareGroupObject = squareGroup5;
-        break;
-      case 6:
-        setSquareGroupFunction = setSquareGroup6;
-        squareGroupObject = squareGroup6;
-        break;
-      case 7:
-        setSquareGroupFunction = setSquareGroup7;
-        squareGroupObject = squareGroup7;
-        break;
-      case 8:
-        setSquareGroupFunction = setSquareGroup8;
-        squareGroupObject = squareGroup8;
-        break;
-      case 9:
-        setSquareGroupFunction = setSquareGroup9;
-        squareGroupObject = squareGroup9;
-        break;
-      default:
-        // TODO: Change this
-        setSquareGroupFunction = () => {};
-        squareGroupObject = initialSquareGroup;
-        break;
-    }
+    const setSquareGroupFunction =
+      squareGroupMap[inputGroupId].setSquareGroupFunction;
+    const squareGroupObject = squareGroupMap[inputGroupId].squareGroupObject;
 
     switch (value) {
       case "1":
