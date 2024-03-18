@@ -84,7 +84,7 @@ function SudokuPuzzle() {
 
   /* ------------------------------ Input Value ------------------------------ */
 
-  /* ----------------------------- Group ! inputs ----------------------------- */
+  /* ------------------------------- Group Input ------------------------------ */
   const [inputValue11, setInputValue11] =
     useState<TInputValue>(initialInputValue);
   const [inputValue12, setInputValue12] =
@@ -124,6 +124,26 @@ function SudokuPuzzle() {
   const [inputValue29, setInputValue29] =
     useState<TInputValue>(initialInputValue);
 
+  /* ----------------------------- Group 3 inputs ----------------------------- */
+  const [inputValue31, setInputValue31] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue32, setInputValue32] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue33, setInputValue33] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue34, setInputValue34] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue35, setInputValue35] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue36, setInputValue36] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue37, setInputValue37] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue38, setInputValue38] =
+    useState<TInputValue>(initialInputValue);
+  const [inputValue39, setInputValue39] =
+    useState<TInputValue>(initialInputValue);
+
   /* -------------------------------------------------------------------------- */
   /*                                    Data                                    */
   /* -------------------------------------------------------------------------- */
@@ -150,6 +170,17 @@ function SudokuPuzzle() {
       7: setInputValue27,
       8: setInputValue28,
       9: setInputValue29,
+    },
+    3: {
+      1: setInputValue31,
+      2: setInputValue32,
+      3: setInputValue33,
+      4: setInputValue34,
+      5: setInputValue35,
+      6: setInputValue36,
+      7: setInputValue37,
+      8: setInputValue38,
+      9: setInputValue39,
     },
   };
 
@@ -269,8 +300,13 @@ function SudokuPuzzle() {
     console.log("squareList2", squareGroup2);
   }, [squareGroup2]);
 
+  useEffect(() => {
+    console.log("squareList3", squareGroup3);
+  }, [squareGroup3]);
+
   return (
     <Grid container width="320px" boxSizing="border-box">
+      {/* Square Group 1 */}
       <Grid item xs={4} border="1px solid black">
         <input
           className={inputValue11.isWrongAnswer ? "wrong-answer" : ""}
@@ -327,6 +363,7 @@ function SudokuPuzzle() {
           type="number"
         />
       </Grid>
+      {/* Square Group 2 */}
       <Grid item xs={4} border="1px solid black">
         <input
           disabled={inputValue21.value !== ""}
@@ -383,16 +420,62 @@ function SudokuPuzzle() {
           type="number"
         />
       </Grid>
+      {/* Square Group 3 */}
       <Grid item xs={4} border="1px solid black">
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
-        <input type="number" />
+        <input
+          disabled={inputValue31.value !== ""}
+          className={inputValue31.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue32.value !== ""}
+          className={inputValue32.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue33.value !== ""}
+          className={inputValue33.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue34.value !== ""}
+          className={inputValue34.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue35.value !== ""}
+          className={inputValue35.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue36.value !== ""}
+          className={inputValue36.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue37.value !== ""}
+          className={inputValue37.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue38.value !== ""}
+          className={inputValue38.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 3)}
+          type="number"
+        />
+        <input
+          disabled={inputValue39.value !== ""}
+          className={inputValue39.isWrongAnswer ? "wrong-answer" : ""}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 3)}
+          type="number"
+        />
       </Grid>
       <Grid item xs={4} border="1px solid black">
         <input type="number" />
