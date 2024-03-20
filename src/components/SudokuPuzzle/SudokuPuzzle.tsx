@@ -9,7 +9,7 @@ import "./style.css";
 /*                                    Type                                    */
 /* -------------------------------------------------------------------------- */
 
-type TSquareGroup = {
+type TGroup = {
   one: boolean;
   two: boolean;
   three: boolean;
@@ -32,8 +32,15 @@ type TSetInputValueMap = {
 
 type TSquareGroupMap = {
   [key: number]: {
-    setSquareGroupFunction: Dispatch<SetStateAction<TSquareGroup>>;
-    squareGroupObject: TSquareGroup;
+    setSquareGroupFunction: Dispatch<SetStateAction<TGroup>>;
+    squareGroupObject: TGroup;
+  };
+};
+
+type TRowGroupMap = {
+  [key: number]: {
+    setRowGroupFunction: Dispatch<SetStateAction<TGroup>>;
+    rowGroupObject: TGroup;
   };
 };
 
@@ -41,7 +48,7 @@ type TSquareGroupMap = {
 /*                                Initial Data                                */
 /* -------------------------------------------------------------------------- */
 
-const initialSquareGroup: TSquareGroup = {
+const initialGroup: TGroup = {
   one: false,
   two: false,
   three: false,
@@ -63,24 +70,27 @@ function SudokuPuzzle() {
   /* -------------------------------------------------------------------------- */
 
   /* ------------------------------ Square Group ------------------------------ */
-  const [squareGroup1, setSquareGroup1] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup2, setSquareGroup2] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup3, setSquareGroup3] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup4, setSquareGroup4] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup5, setSquareGroup5] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup6, setSquareGroup6] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup7, setSquareGroup7] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup8, setSquareGroup8] =
-    useState<TSquareGroup>(initialSquareGroup);
-  const [squareGroup9, setSquareGroup9] =
-    useState<TSquareGroup>(initialSquareGroup);
+  const [squareGroup1, setSquareGroup1] = useState<TGroup>(initialGroup);
+  const [squareGroup2, setSquareGroup2] = useState<TGroup>(initialGroup);
+  const [squareGroup3, setSquareGroup3] = useState<TGroup>(initialGroup);
+  const [squareGroup4, setSquareGroup4] = useState<TGroup>(initialGroup);
+  const [squareGroup5, setSquareGroup5] = useState<TGroup>(initialGroup);
+  const [squareGroup6, setSquareGroup6] = useState<TGroup>(initialGroup);
+  const [squareGroup7, setSquareGroup7] = useState<TGroup>(initialGroup);
+  const [squareGroup8, setSquareGroup8] = useState<TGroup>(initialGroup);
+  const [squareGroup9, setSquareGroup9] = useState<TGroup>(initialGroup);
+
+  /* -------------------------------- Row Group ------------------------------- */
+
+  const [rowGroup1, setRowGroup1] = useState<TGroup>(initialGroup);
+  const [rowGroup2, setRowGroup2] = useState<TGroup>(initialGroup);
+  const [rowGroup3, setRowGroup3] = useState<TGroup>(initialGroup);
+  const [rowGroup4, setRowGroup4] = useState<TGroup>(initialGroup);
+  const [rowGroup5, setRowGroup5] = useState<TGroup>(initialGroup);
+  const [rowGroup6, setRowGroup6] = useState<TGroup>(initialGroup);
+  const [rowGroup7, setRowGroup7] = useState<TGroup>(initialGroup);
+  const [rowGroup8, setRowGroup8] = useState<TGroup>(initialGroup);
+  const [rowGroup9, setRowGroup9] = useState<TGroup>(initialGroup);
 
   /* ------------------------------ Input Value ------------------------------ */
 
@@ -223,6 +233,45 @@ function SudokuPuzzle() {
     },
   };
 
+  const rowGroupMap: TRowGroupMap = {
+    1: {
+      rowGroupObject: rowGroup1,
+      setRowGroupFunction: setRowGroup1,
+    },
+    2: {
+      rowGroupObject: rowGroup2,
+      setRowGroupFunction: setRowGroup2,
+    },
+    3: {
+      rowGroupObject: rowGroup3,
+      setRowGroupFunction: setRowGroup3,
+    },
+    4: {
+      rowGroupObject: rowGroup4,
+      setRowGroupFunction: setRowGroup4,
+    },
+    5: {
+      rowGroupObject: rowGroup5,
+      setRowGroupFunction: setRowGroup5,
+    },
+    6: {
+      rowGroupObject: rowGroup6,
+      setRowGroupFunction: setRowGroup6,
+    },
+    7: {
+      rowGroupObject: rowGroup7,
+      setRowGroupFunction: setRowGroup7,
+    },
+    8: {
+      rowGroupObject: rowGroup8,
+      setRowGroupFunction: setRowGroup8,
+    },
+    9: {
+      rowGroupObject: rowGroup9,
+      setRowGroupFunction: setRowGroup9,
+    },
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
@@ -230,63 +279,77 @@ function SudokuPuzzle() {
   function handleAddNumber(
     value: string,
     inputId: number,
-    inputGroupId: number
+    squareGroupId: number,
+    rowGroupId: number
   ) {
-    const setInputValueFunction = setInputValueMap[inputGroupId][inputId];
+    const setInputValueFunction = setInputValueMap[squareGroupId][inputId];
 
     setInputValueFunction({
       value: value,
     });
 
+    const squareGroupObject = squareGroupMap[squareGroupId].squareGroupObject;
     const setSquareGroupFunction =
-      squareGroupMap[inputGroupId].setSquareGroupFunction;
-    const squareGroupObject = squareGroupMap[inputGroupId].squareGroupObject;
+      squareGroupMap[squareGroupId].setSquareGroupFunction;
+
+    // FIXME: fix it.
+    const rowGroupObject = rowGroupMap[rowGroupId].rowGroupObject;
+    const setRowGroupFunction = rowGroupMap[rowGroupId].setRowGroupFunction;
 
     switch (value) {
       case "1":
-        if (!squareGroupObject.one)
+        if (!squareGroupObject.one && !rowGroupObject.one) {
           setSquareGroupFunction({ ...squareGroupObject, one: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, one: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "2":
-        if (!squareGroupObject.two)
+        if (!squareGroupObject.two && !rowGroupObject.two) {
           setSquareGroupFunction({ ...squareGroupObject, two: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, two: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "3":
-        if (!squareGroupObject.three)
+        if (!squareGroupObject.three && !rowGroupObject.three) {
           setSquareGroupFunction({ ...squareGroupObject, three: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, three: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "4":
-        if (!squareGroupObject.four)
+        if (!squareGroupObject.four && !rowGroupObject.four) {
           setSquareGroupFunction({ ...squareGroupObject, four: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, four: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "5":
-        if (!squareGroupObject.five)
+        if (!squareGroupObject.five && !rowGroupObject.five) {
           setSquareGroupFunction({ ...squareGroupObject, five: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, five: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "6":
-        if (!squareGroupObject.six)
+        if (!squareGroupObject.six && !rowGroupObject.six) {
           setSquareGroupFunction({ ...squareGroupObject, six: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, six: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "7":
-        if (!squareGroupObject.seven)
+        if (!squareGroupObject.seven && !rowGroupObject.seven) {
           setSquareGroupFunction({ ...squareGroupObject, seven: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, seven: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "8":
-        if (!squareGroupObject.eight)
+        if (!squareGroupObject.eight && !rowGroupObject.eight) {
           setSquareGroupFunction({ ...squareGroupObject, eight: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, eight: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "9":
-        if (!squareGroupObject.nine)
+        if (!squareGroupObject.nine && !rowGroupObject.nine) {
           setSquareGroupFunction({ ...squareGroupObject, nine: true });
-        else setInputValueFunction({ value: value, isWrongAnswer: true });
+          setRowGroupFunction({ ...rowGroupObject, nine: true });
+        } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
     }
   }
@@ -304,6 +367,10 @@ function SudokuPuzzle() {
     console.log("squareList3", squareGroup3);
   }, [squareGroup3]);
 
+  useEffect(() => {
+    console.log("rowGroup1", rowGroup1);
+  }, [rowGroup1]);
+
   return (
     <Grid container width="320px" boxSizing="border-box">
       {/* Square Group 1 */}
@@ -311,55 +378,55 @@ function SudokuPuzzle() {
         <input
           className={inputValue11.isWrongAnswer ? "wrong-answer" : ""}
           disabled={inputValue11.value !== ""}
-          onChange={(e) => handleAddNumber(e.target.value, 1, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 1, 1)}
           type="number"
         />
         <input
           disabled={inputValue12.value !== ""}
           className={inputValue12.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 2, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 1, 1)}
           type="number"
         />
         <input
           disabled={inputValue13.value !== ""}
           className={inputValue13.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 3, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 1, 1)}
           type="number"
         />
         <input
           disabled={inputValue14.value !== ""}
           className={inputValue14.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 4, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 1, 2)}
           type="number"
         />
         <input
           disabled={inputValue15.value !== ""}
           className={inputValue15.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 5, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 1, 2)}
           type="number"
         />
         <input
           disabled={inputValue16.value !== ""}
           className={inputValue16.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 6, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 1, 2)}
           type="number"
         />
         <input
           disabled={inputValue17.value !== ""}
           className={inputValue17.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 7, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 1, 3)}
           type="number"
         />
         <input
           disabled={inputValue18.value !== ""}
           className={inputValue18.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 8, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 1, 3)}
           type="number"
         />
         <input
           disabled={inputValue19.value !== ""}
           className={inputValue19.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 9, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 1, 3)}
           type="number"
         />
       </Grid>
@@ -368,55 +435,55 @@ function SudokuPuzzle() {
         <input
           disabled={inputValue21.value !== ""}
           className={inputValue21.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 1, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 2, 1)}
           type="number"
         />
         <input
           disabled={inputValue22.value !== ""}
           className={inputValue22.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 2, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 2, 1)}
           type="number"
         />
         <input
           disabled={inputValue23.value !== ""}
           className={inputValue23.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 3, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 2, 1)}
           type="number"
         />
         <input
           disabled={inputValue24.value !== ""}
           className={inputValue24.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 4, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 2, 2)}
           type="number"
         />
         <input
           disabled={inputValue25.value !== ""}
           className={inputValue25.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 5, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 2, 2)}
           type="number"
         />
         <input
           disabled={inputValue26.value !== ""}
           className={inputValue26.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 6, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 2, 2)}
           type="number"
         />
         <input
           disabled={inputValue27.value !== ""}
           className={inputValue27.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 7, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 2, 3)}
           type="number"
         />
         <input
           disabled={inputValue28.value !== ""}
           className={inputValue28.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 8, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 2, 3)}
           type="number"
         />
         <input
           disabled={inputValue29.value !== ""}
           className={inputValue29.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 9, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 2, 3)}
           type="number"
         />
       </Grid>
@@ -425,55 +492,55 @@ function SudokuPuzzle() {
         <input
           disabled={inputValue31.value !== ""}
           className={inputValue31.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 1, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 3, 1)}
           type="number"
         />
         <input
           disabled={inputValue32.value !== ""}
           className={inputValue32.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 2, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 3, 1)}
           type="number"
         />
         <input
           disabled={inputValue33.value !== ""}
           className={inputValue33.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 3, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 3, 1)}
           type="number"
         />
         <input
           disabled={inputValue34.value !== ""}
           className={inputValue34.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 4, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 3, 2)}
           type="number"
         />
         <input
           disabled={inputValue35.value !== ""}
           className={inputValue35.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 5, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 3, 2)}
           type="number"
         />
         <input
           disabled={inputValue36.value !== ""}
           className={inputValue36.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 6, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 3, 2)}
           type="number"
         />
         <input
           disabled={inputValue37.value !== ""}
           className={inputValue37.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 7, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 3, 3)}
           type="number"
         />
         <input
           disabled={inputValue38.value !== ""}
           className={inputValue38.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 8, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 3, 3)}
           type="number"
         />
         <input
           disabled={inputValue39.value !== ""}
           className={inputValue39.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 9, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 3, 3)}
           type="number"
         />
       </Grid>
