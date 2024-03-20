@@ -30,6 +30,8 @@ type TSetInputValueMap = {
   [key: number]: { [key: number]: Dispatch<SetStateAction<TInputValue>> };
 };
 
+/* ------------------------------- Group Type ------------------------------- */
+
 type TSquareGroupMap = {
   [key: number]: {
     setSquareGroupFunction: Dispatch<SetStateAction<TGroup>>;
@@ -41,6 +43,13 @@ type TRowGroupMap = {
   [key: number]: {
     setRowGroupFunction: Dispatch<SetStateAction<TGroup>>;
     rowGroupObject: TGroup;
+  };
+};
+
+type TColGroupMap = {
+  [key: number]: {
+    setColGroupFunction: Dispatch<SetStateAction<TGroup>>;
+    colGroupObject: TGroup;
   };
 };
 
@@ -91,6 +100,18 @@ function SudokuPuzzle() {
   const [rowGroup7, setRowGroup7] = useState<TGroup>(initialGroup);
   const [rowGroup8, setRowGroup8] = useState<TGroup>(initialGroup);
   const [rowGroup9, setRowGroup9] = useState<TGroup>(initialGroup);
+
+  /* ------------------------------ Column Group ------------------------------ */
+
+  const [colGroup1, setColGroup1] = useState<TGroup>(initialGroup);
+  const [colGroup2, setColGroup2] = useState<TGroup>(initialGroup);
+  const [colGroup3, setColGroup3] = useState<TGroup>(initialGroup);
+  const [colGroup4, setColGroup4] = useState<TGroup>(initialGroup);
+  const [colGroup5, setColGroup5] = useState<TGroup>(initialGroup);
+  const [colGroup6, setColGroup6] = useState<TGroup>(initialGroup);
+  const [colGroup7, setColGroup7] = useState<TGroup>(initialGroup);
+  const [colGroup8, setColGroup8] = useState<TGroup>(initialGroup);
+  const [colGroup9, setColGroup9] = useState<TGroup>(initialGroup);
 
   /* ------------------------------ Input Value ------------------------------ */
 
@@ -272,6 +293,45 @@ function SudokuPuzzle() {
     },
   };
 
+  const colGroupMap: TColGroupMap = {
+    1: {
+      colGroupObject: colGroup1,
+      setColGroupFunction: setColGroup1,
+    },
+    2: {
+      colGroupObject: colGroup2,
+      setColGroupFunction: setColGroup2,
+    },
+    3: {
+      colGroupObject: colGroup3,
+      setColGroupFunction: setColGroup3,
+    },
+    4: {
+      colGroupObject: colGroup4,
+      setColGroupFunction: setColGroup4,
+    },
+    5: {
+      colGroupObject: colGroup5,
+      setColGroupFunction: setColGroup5,
+    },
+    6: {
+      colGroupObject: colGroup6,
+      setColGroupFunction: setColGroup6,
+    },
+    7: {
+      colGroupObject: colGroup7,
+      setColGroupFunction: setColGroup7,
+    },
+    8: {
+      colGroupObject: colGroup8,
+      setColGroupFunction: setColGroup8,
+    },
+    9: {
+      colGroupObject: colGroup9,
+      setColGroupFunction: setColGroup9,
+    },
+  };
+
   /* -------------------------------------------------------------------------- */
   /*                                  Function                                  */
   /* -------------------------------------------------------------------------- */
@@ -280,8 +340,10 @@ function SudokuPuzzle() {
     value: string,
     inputId: number,
     squareGroupId: number,
-    rowGroupId: number
+    rowGroupId: number,
+    colGroupId: number
   ) {
+    // Set data from map object.
     const setInputValueFunction = setInputValueMap[squareGroupId][inputId];
 
     setInputValueFunction({
@@ -292,63 +354,110 @@ function SudokuPuzzle() {
     const setSquareGroupFunction =
       squareGroupMap[squareGroupId].setSquareGroupFunction;
 
-    // FIXME: fix it.
     const rowGroupObject = rowGroupMap[rowGroupId].rowGroupObject;
     const setRowGroupFunction = rowGroupMap[rowGroupId].setRowGroupFunction;
 
+    const colGroupObject = colGroupMap[colGroupId].colGroupObject;
+    const setColGroupFunction = colGroupMap[colGroupId].setColGroupFunction;
+
     switch (value) {
       case "1":
-        if (!squareGroupObject.one && !rowGroupObject.one) {
+        if (
+          !squareGroupObject.one &&
+          !rowGroupObject.one &&
+          !colGroupObject.one
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, one: true });
           setRowGroupFunction({ ...rowGroupObject, one: true });
+          setColGroupFunction({ ...rowGroupObject, one: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "2":
-        if (!squareGroupObject.two && !rowGroupObject.two) {
+        if (
+          !squareGroupObject.two &&
+          !rowGroupObject.two &&
+          !colGroupObject.two
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, two: true });
           setRowGroupFunction({ ...rowGroupObject, two: true });
+          setColGroupFunction({ ...rowGroupObject, two: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "3":
-        if (!squareGroupObject.three && !rowGroupObject.three) {
+        if (
+          !squareGroupObject.three &&
+          !rowGroupObject.three &&
+          !colGroupObject.three
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, three: true });
           setRowGroupFunction({ ...rowGroupObject, three: true });
+          setColGroupFunction({ ...rowGroupObject, three: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "4":
-        if (!squareGroupObject.four && !rowGroupObject.four) {
+        if (
+          !squareGroupObject.four &&
+          !rowGroupObject.four &&
+          !colGroupObject.four
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, four: true });
           setRowGroupFunction({ ...rowGroupObject, four: true });
+          setColGroupFunction({ ...rowGroupObject, four: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "5":
-        if (!squareGroupObject.five && !rowGroupObject.five) {
+        if (
+          !squareGroupObject.five &&
+          !rowGroupObject.five &&
+          !colGroupObject.five
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, five: true });
           setRowGroupFunction({ ...rowGroupObject, five: true });
+          setColGroupFunction({ ...rowGroupObject, five: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "6":
-        if (!squareGroupObject.six && !rowGroupObject.six) {
+        if (
+          !squareGroupObject.six &&
+          !rowGroupObject.six &&
+          !colGroupObject.six
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, six: true });
           setRowGroupFunction({ ...rowGroupObject, six: true });
+          setColGroupFunction({ ...rowGroupObject, six: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "7":
-        if (!squareGroupObject.seven && !rowGroupObject.seven) {
+        if (
+          !squareGroupObject.seven &&
+          !rowGroupObject.seven &&
+          !colGroupObject.seven
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, seven: true });
           setRowGroupFunction({ ...rowGroupObject, seven: true });
+          setColGroupFunction({ ...rowGroupObject, seven: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "8":
-        if (!squareGroupObject.eight && !rowGroupObject.eight) {
+        if (
+          !squareGroupObject.eight &&
+          !rowGroupObject.eight &&
+          !colGroupObject.eight
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, eight: true });
           setRowGroupFunction({ ...rowGroupObject, eight: true });
+          setColGroupFunction({ ...rowGroupObject, eight: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
       case "9":
-        if (!squareGroupObject.nine && !rowGroupObject.nine) {
+        if (
+          !squareGroupObject.nine &&
+          !rowGroupObject.nine &&
+          !colGroupObject.nine
+        ) {
           setSquareGroupFunction({ ...squareGroupObject, nine: true });
           setRowGroupFunction({ ...rowGroupObject, nine: true });
+          setColGroupFunction({ ...rowGroupObject, nine: true });
         } else setInputValueFunction({ value: value, isWrongAnswer: true });
         break;
     }
@@ -378,55 +487,55 @@ function SudokuPuzzle() {
         <input
           className={inputValue11.isWrongAnswer ? "wrong-answer" : ""}
           disabled={inputValue11.value !== ""}
-          onChange={(e) => handleAddNumber(e.target.value, 1, 1, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 1, 1, 1)}
           type="number"
         />
         <input
           disabled={inputValue12.value !== ""}
           className={inputValue12.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 2, 1, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 1, 1, 2)}
           type="number"
         />
         <input
           disabled={inputValue13.value !== ""}
           className={inputValue13.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 3, 1, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 1, 1, 3)}
           type="number"
         />
         <input
           disabled={inputValue14.value !== ""}
           className={inputValue14.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 4, 1, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 1, 2, 1)}
           type="number"
         />
         <input
           disabled={inputValue15.value !== ""}
           className={inputValue15.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 5, 1, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 1, 2, 2)}
           type="number"
         />
         <input
           disabled={inputValue16.value !== ""}
           className={inputValue16.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 6, 1, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 1, 2, 3)}
           type="number"
         />
         <input
           disabled={inputValue17.value !== ""}
           className={inputValue17.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 7, 1, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 1, 3, 1)}
           type="number"
         />
         <input
           disabled={inputValue18.value !== ""}
           className={inputValue18.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 8, 1, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 1, 3, 2)}
           type="number"
         />
         <input
           disabled={inputValue19.value !== ""}
           className={inputValue19.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 9, 1, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 1, 3, 3)}
           type="number"
         />
       </Grid>
@@ -435,55 +544,55 @@ function SudokuPuzzle() {
         <input
           disabled={inputValue21.value !== ""}
           className={inputValue21.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 1, 2, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 2, 1, 1)}
           type="number"
         />
         <input
           disabled={inputValue22.value !== ""}
           className={inputValue22.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 2, 2, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 2, 1, 2)}
           type="number"
         />
         <input
           disabled={inputValue23.value !== ""}
           className={inputValue23.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 3, 2, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 2, 1, 3)}
           type="number"
         />
         <input
           disabled={inputValue24.value !== ""}
           className={inputValue24.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 4, 2, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 2, 2, 1)}
           type="number"
         />
         <input
           disabled={inputValue25.value !== ""}
           className={inputValue25.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 5, 2, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 2, 2, 2)}
           type="number"
         />
         <input
           disabled={inputValue26.value !== ""}
           className={inputValue26.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 6, 2, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 2, 2, 3)}
           type="number"
         />
         <input
           disabled={inputValue27.value !== ""}
           className={inputValue27.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 7, 2, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 2, 3, 1)}
           type="number"
         />
         <input
           disabled={inputValue28.value !== ""}
           className={inputValue28.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 8, 2, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 2, 3, 2)}
           type="number"
         />
         <input
           disabled={inputValue29.value !== ""}
           className={inputValue29.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 9, 2, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 2, 3, 3)}
           type="number"
         />
       </Grid>
@@ -492,55 +601,55 @@ function SudokuPuzzle() {
         <input
           disabled={inputValue31.value !== ""}
           className={inputValue31.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 1, 3, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 1, 3, 1, 1)}
           type="number"
         />
         <input
           disabled={inputValue32.value !== ""}
           className={inputValue32.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 2, 3, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 2, 3, 1, 2)}
           type="number"
         />
         <input
           disabled={inputValue33.value !== ""}
           className={inputValue33.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 3, 3, 1)}
+          onChange={(e) => handleAddNumber(e.target.value, 3, 3, 1, 3)}
           type="number"
         />
         <input
           disabled={inputValue34.value !== ""}
           className={inputValue34.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 4, 3, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 4, 3, 2, 1)}
           type="number"
         />
         <input
           disabled={inputValue35.value !== ""}
           className={inputValue35.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 5, 3, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 5, 3, 2, 2)}
           type="number"
         />
         <input
           disabled={inputValue36.value !== ""}
           className={inputValue36.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 6, 3, 2)}
+          onChange={(e) => handleAddNumber(e.target.value, 6, 3, 2, 3)}
           type="number"
         />
         <input
           disabled={inputValue37.value !== ""}
           className={inputValue37.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 7, 3, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 7, 3, 3, 1)}
           type="number"
         />
         <input
           disabled={inputValue38.value !== ""}
           className={inputValue38.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 8, 3, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 8, 3, 3, 2)}
           type="number"
         />
         <input
           disabled={inputValue39.value !== ""}
           className={inputValue39.isWrongAnswer ? "wrong-answer" : ""}
-          onChange={(e) => handleAddNumber(e.target.value, 9, 3, 3)}
+          onChange={(e) => handleAddNumber(e.target.value, 9, 3, 3, 3)}
           type="number"
         />
       </Grid>
