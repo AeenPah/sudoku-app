@@ -647,23 +647,6 @@ function SudokuPuzzle() {
     }
   }
 
-  //TODO: Delete this later.
-  useEffect(() => {
-    console.log("squareList1", squareGroup1);
-  }, [squareGroup1]);
-
-  useEffect(() => {
-    console.log("squareList2", squareGroup2);
-  }, [squareGroup2]);
-
-  useEffect(() => {
-    console.log("squareList3", squareGroup3);
-  }, [squareGroup3]);
-
-  useEffect(() => {
-    console.log("rowGroup1", rowGroup1);
-  }, [rowGroup1]);
-
   return (
     <Grid container width="320px" boxSizing="border-box">
       {/* Square Group 1 */}
