@@ -5,7 +5,7 @@ function page() {
   return (
     <Stack>
       <Typography variant="h3">Sudoku Game</Typography>
-      {/* TODO: Add Sudoku Puzzle */}
+      {/* Sudoku Puzzle */}
       <Box m={10}>
         <SudokuPuzzle />
       </Box>
