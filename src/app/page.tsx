@@ -13,7 +13,9 @@ export default function Home() {
   return (
     <Stack alignItems="center" justifyContent="center" height="100vh" gap={4}>
       <Typography variant="h2">Welcome to Sudoku App</Typography>
-      <Button onClick={() => router.push("/sudoku-game")}>Start</Button>
+      <Button onClick={() => router.push("/sudoku-game/game-table")}>
+        Start
+      </Button>
     </Stack>
   );
 }
