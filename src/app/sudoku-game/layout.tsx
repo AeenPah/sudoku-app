@@ -1,4 +1,5 @@
-import { Box, Grid } from "@mui/material";
+import VerticalMenu from "@/components/VerticalMenu/VerticalMenu";
+import { Stack } from "@mui/material";
 
 export default function SudokuGame({
   children,
@@ -6,15 +7,9 @@ export default function SudokuGame({
   children: React.ReactNode;
 }): React.ReactNode {
   return (
-    <Grid container>
-      <Grid item xs={1}>
-        <Box bgcolor="primary.main" height="90vh" my="5vh">
-          side-bar
-        </Box>
-      </Grid>
-      <Grid item xs={11}>
-        {children}
-      </Grid>
-    </Grid>
+    <Stack direction="row">
+      <VerticalMenu />
+      <Stack component="main">{children}</Stack>
+    </Stack>
   );
 }
