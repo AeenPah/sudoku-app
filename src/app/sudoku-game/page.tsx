@@ -3,14 +3,16 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 
 function page() {
   return (
-    <Stack>
+    <Stack alignItems="center" mt={6}>
       <Typography variant="h3">Sudoku Game</Typography>
+
       {/* Sudoku Puzzle */}
       <Box m={10}>
         <SudokuPuzzle />
       </Box>
+
       {/* TODO: Add buttons  */}
-      <Stack direction="row">
+      <Stack direction="row" gap={2}>
         <Button>Done</Button>
         <Button>Reset</Button>
       </Stack>

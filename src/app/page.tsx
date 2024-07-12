@@ -1,7 +1,7 @@
 "use client";
 
-import { Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { Button, Stack, Typography } from "@mui/material";
 
 export default function Home() {
   /* -------------------------------------------------------------------------- */
