@@ -1,12 +1,27 @@
+"use client";
+
+import { ChangeEvent } from "react";
+
 import { TextField } from "@mui/material";
 
 function SudokuPuzzle2() {
+  function handleInputValue(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    const value: string = event.target.value;
+    if (!value) return;
+
+    if (value.length > 1) {
+      event.target.value = value.slice(-1);
+    }
+  }
+
   return (
     <>
       <TextField
         type="number"
-        inputProps={{ max: 1 }}
         variant="outlined"
+        onChange={(e) => handleInputValue(e)}
         sx={{
           "& .MuiOutlinedInput-root": {
             "& input": {
