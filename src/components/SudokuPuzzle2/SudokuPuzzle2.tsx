@@ -19,15 +19,31 @@ function SudokuPuzzle2() {
 
   const [table, setTable] = useState<TTable>(initialTable);
 
-  console.log("initialTable", initialTable);
+  console.log("table", table);
 
   return (
-    <Stack direction="row" width="450px" flexWrap="wrap">
-      {Array(81)
+    <Stack direction="row" width="460px" flexWrap="wrap">
+      {Array(3)
         .fill(0)
-        .map(() => (
-          <PuzzleTextField />
-        ))}
+        .map((item1, index1) =>
+          Array(3)
+            .fill(0)
+            .map((item2, index2) => (
+              <Stack
+                key={`${index1}-${index2}`}
+                border="1px solid black"
+                flexWrap="wrap"
+                direction="row"
+                width="152px"
+              >
+                {Array(9)
+                  .fill(0)
+                  .map((item3, index3) => (
+                    <PuzzleTextField key={`${index1}-${index2}-${index3}`} />
+                  ))}
+              </Stack>
+            ))
+        )}
     </Stack>
   );
 }

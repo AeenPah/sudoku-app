@@ -1,8 +1,8 @@
-import { TextField } from "@mui/material";
+import { TextField, TextFieldProps } from "@mui/material";
 
 import limitToLastCharacter from "@/utils/limitToLastCharacter";
 
-function PuzzleTextField() {
+function PuzzleTextField({ ...props }: TextFieldProps): JSX.Element {
   return (
     <TextField
       type="number"
@@ -19,6 +19,7 @@ function PuzzleTextField() {
           },
         },
       }}
+      {...props}
     />
   );
 }
