@@ -1,10 +1,24 @@
 "use client";
 
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { TextField } from "@mui/material";
 
 function SudokuPuzzle2() {
+  type TTable = string[][][];
+
+  const initialTable: TTable = Array(3)
+    .fill(0)
+    .map(() =>
+      Array(3)
+        .fill(0)
+        .map(() => Array(9).fill(0))
+    );
+
+  const [table, setTable] = useState<TTable>(initialTable);
+
+  console.log("initialTable", initialTable);
+
   function handleInputValue(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
