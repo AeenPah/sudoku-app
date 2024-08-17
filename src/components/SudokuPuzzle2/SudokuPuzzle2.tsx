@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { Stack } from "@mui/material";
 
 import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
+import limitToLastCharacter from "@/utils/limitToLastCharacter";
 
 function SudokuPuzzle2() {
   type TTable = string[][][];
@@ -21,14 +22,27 @@ function SudokuPuzzle2() {
 
   console.log("table", table);
 
+  function setValueToTableCells(
+    index1: number,
+    index2: number,
+    index3: number,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
+    console.log("handleOnChange", index1, index2, index3, e.target.value);
+
+    const tempTable = [...table];
+    tempTable[index1][index2][index3] = e.target.value;
+    setTable(tempTable);
+  }
+
   return (
     <Stack direction="row" width="460px" flexWrap="wrap">
       {Array(3)
         .fill(0)
-        .map((item1, index1) =>
+        .map((_, index1) =>
           Array(3)
             .fill(0)
-            .map((item2, index2) => (
+            .map((_, index2) => (
               <Stack
                 key={`${index1}-${index2}`}
                 border="1px solid black"
@@ -38,8 +52,14 @@ function SudokuPuzzle2() {
               >
                 {Array(9)
                   .fill(0)
-                  .map((item3, index3) => (
-                    <PuzzleTextField key={`${index1}-${index2}-${index3}`} />
+                  .map((_, index3) => (
+                    <PuzzleTextField
+                      key={`${index1}-${index2}-${index3}`}
+                      onChange={(e) => {
+                        limitToLastCharacter(e);
+                        setValueToTableCells(index1, index2, index3, e);
+                      }}
+                    />
                   ))}
               </Stack>
             ))
