@@ -1,8 +1,10 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
-import { TextField } from "@mui/material";
+import { Stack } from "@mui/material";
+
+import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 
 function SudokuPuzzle2() {
   type TTable = string[][][];
@@ -19,36 +21,14 @@ function SudokuPuzzle2() {
 
   console.log("initialTable", initialTable);
 
-  function handleInputValue(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const value: string = event.target.value;
-    if (!value) return;
-
-    if (value.length > 1) {
-      event.target.value = value.slice(-1);
-    }
-  }
-
   return (
-    <>
-      <TextField
-        type="number"
-        variant="outlined"
-        onChange={(e) => handleInputValue(e)}
-        sx={{
-          "& .MuiOutlinedInput-root": {
-            "& input": {
-              fontSize: "1.4rem",
-              height: 50,
-              padding: 0,
-              textAlign: "center",
-              width: 50,
-            },
-          },
-        }}
-      />
-    </>
+    <Stack direction="row" width="450px" flexWrap="wrap">
+      {Array(81)
+        .fill(0)
+        .map(() => (
+          <PuzzleTextField />
+        ))}
+    </Stack>
   );
 }
 
