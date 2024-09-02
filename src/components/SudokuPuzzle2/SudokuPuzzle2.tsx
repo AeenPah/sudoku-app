@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
 import { Stack } from "@mui/material";
 
@@ -36,6 +36,8 @@ function SudokuPuzzle2() {
     innerCellIndex: number,
     value: string
   ) {
+    if (!value) return;
+
     // console.log("handleOnChange", rowIndex, columnIndex, innerCellIndex, value);
 
     const tempTable = [...table];
@@ -123,7 +125,6 @@ function SudokuPuzzle2() {
                     <PuzzleTextField
                       key={`${index1}-${index2}-${index3}`}
                       onChange={(event) => {
-                        // TODO: use regex and yup to handle this.
                         limitToLastCharacter(event);
                         setValueToTableCells(
                           index1,
