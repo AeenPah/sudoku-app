@@ -1,8 +1,8 @@
-import SudokuPuzzle from "@/components/SudokuPuzzle/SudokuPuzzle";
+// import SudokuPuzzle from "@/components/SudokuPuzzle/SudokuPuzzle";
 import SudokuPuzzle2 from "@/components/SudokuPuzzle2/SudokuPuzzle2";
 import { Box, Button, Stack, Typography } from "@mui/material";
 
-function page() {
+function SudokuGamePage() {
   return (
     <Stack alignItems="center" mt={6}>
       <Typography variant="h3">Sudoku Game</Typography>
@@ -13,9 +13,9 @@ function page() {
       </Box>
 
       {/* Sudoku Puzzle */}
-      <Box m={10}>
+      {/* <Box m={10}>
         <SudokuPuzzle />
-      </Box>
+      </Box> */}
 
       {/* TODO: Add buttons  */}
       <Stack direction="row" gap={2}>
@@ -26,4 +26,4 @@ function page() {
   );
 }
 
-export default page;
+export default SudokuGamePage;

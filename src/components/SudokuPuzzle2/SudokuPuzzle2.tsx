@@ -7,31 +7,98 @@ import { Stack } from "@mui/material";
 import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 import limitToLastCharacter from "@/utils/limitToLastCharacter";
 
-function SudokuPuzzle2() {
-  type TTable = string[][][];
+type TTable = string[][][];
 
-  const initialTable: TTable = Array(3)
-    .fill(0)
-    .map(() =>
-      Array(3)
-        .fill(0)
-        .map(() => Array(9).fill(0))
-    );
+const initialTable: TTable = Array(3)
+  .fill(0)
+  .map(() =>
+    Array(3)
+      .fill(0)
+      .map(() => Array(9).fill("0"))
+  );
+
+function SudokuPuzzle2() {
+  /* -------------------------------------------------------------------------- */
+  /*                                    State                                   */
+  /* -------------------------------------------------------------------------- */
 
   const [table, setTable] = useState<TTable>(initialTable);
 
-  console.log("table", table);
+  // console.log("table", table);
+
+  /* -------------------------------------------------------------------------- */
+  /*                                  Functions                                 */
+  /* -------------------------------------------------------------------------- */
 
   function setValueToTableCells(
-    index1: number,
-    index2: number,
-    index3: number,
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    rowIndex: number,
+    columnIndex: number,
+    innerCellIndex: number,
+    value: string
   ) {
-    console.log("handleOnChange", index1, index2, index3, e.target.value);
+    // console.log("handleOnChange", rowIndex, columnIndex, innerCellIndex, value);
 
     const tempTable = [...table];
-    tempTable[index1][index2][index3] = e.target.value;
+
+    // for find wrong number in inner cells
+    tempTable.forEach((row, indexRow) => {
+      if (indexRow !== rowIndex) return;
+
+      row.forEach((column, indexColumn) => {
+        if (indexColumn !== columnIndex) return;
+
+        column.forEach((innerCell) => {
+          if (innerCell === value) console.log("wrong innerCell");
+        });
+      });
+    });
+
+    // for find wrong number in columns
+    tempTable.forEach((row) => {
+      row.forEach((column, indexColumn) => {
+        if (indexColumn !== columnIndex) return;
+
+        column.forEach((innerCell, indexInnerCell) => {
+          // console.log(innerCellIndex % 3);
+          if (innerCellIndex % 3 === indexInnerCell % 3 && innerCell === value)
+            console.log("wrong column");
+        });
+      });
+    });
+
+    // for find wrong number in rows
+    tempTable.forEach((row, indexRow) => {
+      if (indexRow !== rowIndex) return;
+
+      row.forEach((column) => {
+        column.forEach((innerCell, indexInnerCell) => {
+          if (innerCellIndex < 3 && indexInnerCell < 3 && innerCell === value) {
+            console.log("Wrong row 1");
+          }
+
+          if (
+            innerCellIndex < 6 &&
+            indexInnerCell < 6 &&
+            innerCellIndex >= 3 &&
+            indexInnerCell >= 3 &&
+            innerCell === value
+          ) {
+            console.log("Wrong row 2");
+          }
+
+          if (
+            innerCellIndex >= 6 &&
+            indexInnerCell >= 6 &&
+            innerCell === value
+          ) {
+            console.log("Wrong row 3");
+          }
+        });
+      });
+    });
+
+    // set value to the right place at the state.
+    tempTable[rowIndex][columnIndex][innerCellIndex] = value;
     setTable(tempTable);
   }
 
@@ -55,9 +122,15 @@ function SudokuPuzzle2() {
                   .map((_, index3) => (
                     <PuzzleTextField
                       key={`${index1}-${index2}-${index3}`}
-                      onChange={(e) => {
-                        limitToLastCharacter(e);
-                        setValueToTableCells(index1, index2, index3, e);
+                      onChange={(event) => {
+                        // TODO: use regex and yup to handle this.
+                        limitToLastCharacter(event);
+                        setValueToTableCells(
+                          index1,
+                          index2,
+                          index3,
+                          event.target.value
+                        );
                       }}
                     />
                   ))}
