@@ -5,7 +5,6 @@ import limitToLastCharacter from "@/utils/limitToLastCharacter";
 function PuzzleTextField({ ...props }: TextFieldProps): JSX.Element {
   return (
     <TextField
-      type="number"
       variant="outlined"
       onChange={(e) => limitToLastCharacter(e)}
       sx={{
