@@ -124,56 +124,27 @@ function SudokuPuzzle() {
 
       currentRow.forEach((currentColumn, columnIndex) => {
         currentColumn.forEach((currentInnerCell, innerCellIndex) => {
-          if (currentInnerCell === inputValue) {
-            if (innerCell < 3 && innerCellIndex < 3) {
-              markCellsAsError({
-                oldValue: {
-                  columnIndex: column,
-                  innerCellIndex: innerCell,
-                  rowIndex: row,
-                },
-                newValue: {
-                  indexColumn: columnIndex,
-                  indexInnerCell: innerCellIndex,
-                  indexRow: rowIndex,
-                },
-              });
-            }
-
-            if (
-              innerCell < 6 &&
-              innerCellIndex < 6 &&
-              innerCell >= 3 &&
-              innerCellIndex >= 3
-            ) {
-              markCellsAsError({
-                oldValue: {
-                  columnIndex: column,
-                  innerCellIndex: innerCell,
-                  rowIndex: row,
-                },
-                newValue: {
-                  indexColumn: columnIndex,
-                  indexInnerCell: innerCellIndex,
-                  indexRow: rowIndex,
-                },
-              });
-            }
-
-            if (innerCell >= 6 && innerCellIndex >= 6) {
-              markCellsAsError({
-                oldValue: {
-                  columnIndex: column,
-                  innerCellIndex: innerCell,
-                  rowIndex: row,
-                },
-                newValue: {
-                  indexColumn: columnIndex,
-                  indexInnerCell: innerCellIndex,
-                  indexRow: rowIndex,
-                },
-              });
-            }
+          if (
+            currentInnerCell === inputValue &&
+            ((innerCell < 3 && innerCellIndex < 3) ||
+              (innerCell >= 3 &&
+                innerCell < 6 &&
+                innerCellIndex >= 3 &&
+                innerCellIndex < 6) ||
+              (innerCell >= 6 && innerCellIndex >= 6))
+          ) {
+            markCellsAsError({
+              oldValue: {
+                columnIndex: column,
+                innerCellIndex: innerCell,
+                rowIndex: row,
+              },
+              newValue: {
+                indexColumn: columnIndex,
+                indexInnerCell: innerCellIndex,
+                indexRow: rowIndex,
+              },
+            });
           }
         });
       });
