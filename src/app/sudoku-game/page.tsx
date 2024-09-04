@@ -1,5 +1,5 @@
 // import SudokuPuzzle from "@/components/SudokuPuzzle/SudokuPuzzle";
-import SudokuPuzzle2 from "@/components/SudokuPuzzle2/SudokuPuzzle2";
+import SudokuPuzzle from "@/components/SudokuPuzzle/SudokuPuzzle";
 import { Box, Button, Stack, Typography } from "@mui/material";
 
 function SudokuGamePage() {
@@ -9,7 +9,7 @@ function SudokuGamePage() {
 
       {/* Sudoku Puzzle 2 */}
       <Box m={10}>
-        <SudokuPuzzle2 />
+        <SudokuPuzzle />
       </Box>
 
       {/* Sudoku Puzzle */}
