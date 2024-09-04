@@ -1,31 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Stack } from "@mui/material";
 
-import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 import limitToLastCharacter from "@/utils/limitToLastCharacter";
 
-type TNumberGrid = string[][][];
+import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 
-const initialNumberGrid: TNumberGrid = Array(3)
-  .fill(0)
-  .map(() =>
-    Array(3)
-      .fill(0)
-      .map(() => Array(9).fill("0"))
-  );
-
-type TCellStatus = { status: boolean }[][][];
-
-const initialCellStatus: TCellStatus = Array(3)
-  .fill(0)
-  .map(() =>
-    Array(3)
-      .fill(0)
-      .map(() => Array(9).fill({ status: true }))
-  );
+import { TCellStatus, TNumberGrid } from "./SudokuPuzzle.type";
+import { initialCellStatus, initialNumberGrid } from "./SudokuPuzzle.const";
 
 function SudokuPuzzle() {
   /* -------------------------------------------------------------------------- */
