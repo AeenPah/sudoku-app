@@ -7,9 +7,9 @@ import { Stack } from "@mui/material";
 import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 import limitToLastCharacter from "@/utils/limitToLastCharacter";
 
-type TTable = string[][][];
+type TNumberGrid = string[][][];
 
-const initialTable: TTable = Array(3)
+const initialNumberGrid: TNumberGrid = Array(3)
   .fill(0)
   .map(() =>
     Array(3)
@@ -17,9 +17,9 @@ const initialTable: TTable = Array(3)
       .map(() => Array(9).fill("0"))
   );
 
-type TCells = { status: boolean }[][][];
+type TCellStatus = { status: boolean }[][][];
 
-const initialCells: TCells = Array(3)
+const initialCellStatus: TCellStatus = Array(3)
   .fill(0)
   .map(() =>
     Array(3)
@@ -32,18 +32,16 @@ function SudokuPuzzle2() {
   /*                                    State                                   */
   /* -------------------------------------------------------------------------- */
 
-  const [table, setTable] = useState<TTable>(initialTable);
-  const [cells, setCells] = useState<TCells>(initialCells);
-
-  // console.log("table", table);
+  const [numberGrid, setNumberGrid] = useState<TNumberGrid>(initialNumberGrid);
+  const [cellStatus, setCellStatus] = useState<TCellStatus>(initialCellStatus);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
 
-  function handleShowError({
-    oldValue,
-    newValue,
+  function markCellsAsError({
+    oldValue: { rowIndex, columnIndex, innerCellIndex },
+    newValue: { indexRow, indexColumn, indexInnerCell },
   }: {
     oldValue: {
       rowIndex: number;
@@ -55,20 +53,17 @@ function SudokuPuzzle2() {
       indexColumn: number;
       indexInnerCell: number;
     };
-  }) {
-    const tempCells = cells;
-    tempCells[oldValue.rowIndex][oldValue.columnIndex][
-      oldValue.innerCellIndex
-    ] = {
+  }): void {
+    const updatedCells = JSON.parse(JSON.stringify(cellStatus));
+
+    updatedCells[rowIndex][columnIndex][innerCellIndex] = {
       status: false,
     };
-    tempCells[newValue.indexRow][newValue.indexColumn][
-      newValue.indexInnerCell
-    ] = {
+    updatedCells[indexRow][indexColumn][indexInnerCell] = {
       status: false,
     };
 
-    setCells(tempCells);
+    setCellStatus(updatedCells);
   }
 
   function setValueToTableCells(
@@ -76,12 +71,12 @@ function SudokuPuzzle2() {
     columnIndex: number,
     innerCellIndex: number,
     value: string
-  ) {
+  ): void {
     if (!value) return;
 
     // console.log("handleOnChange", rowIndex, columnIndex, innerCellIndex, value);
 
-    const tempTable = [...table];
+    const tempTable: TNumberGrid = JSON.parse(JSON.stringify(numberGrid));
 
     // To find wrong number in inner cells
     tempTable.forEach((row, indexRow) => {
@@ -92,7 +87,7 @@ function SudokuPuzzle2() {
 
         column.forEach((innerCell, indexInnerCell) => {
           if (innerCell === value && value !== "0") {
-            handleShowError({
+            markCellsAsError({
               oldValue: { columnIndex, innerCellIndex, rowIndex },
               newValue: { indexColumn, indexInnerCell, indexRow },
             });
@@ -111,7 +106,7 @@ function SudokuPuzzle2() {
             innerCellIndex % 3 === indexInnerCell % 3 &&
             innerCell === value
           ) {
-            handleShowError({
+            markCellsAsError({
               oldValue: { columnIndex, innerCellIndex, rowIndex },
               newValue: { indexColumn, indexInnerCell, indexRow },
             });
@@ -128,7 +123,7 @@ function SudokuPuzzle2() {
         column.forEach((innerCell, indexInnerCell) => {
           if (innerCell === value) {
             if (innerCellIndex < 3 && indexInnerCell < 3) {
-              handleShowError({
+              markCellsAsError({
                 oldValue: { columnIndex, innerCellIndex, rowIndex },
                 newValue: { indexColumn, indexInnerCell, indexRow },
               });
@@ -140,14 +135,14 @@ function SudokuPuzzle2() {
               innerCellIndex >= 3 &&
               indexInnerCell >= 3
             ) {
-              handleShowError({
+              markCellsAsError({
                 oldValue: { columnIndex, innerCellIndex, rowIndex },
                 newValue: { indexColumn, indexInnerCell, indexRow },
               });
             }
 
             if (innerCellIndex >= 6 && indexInnerCell >= 6) {
-              handleShowError({
+              markCellsAsError({
                 oldValue: { columnIndex, innerCellIndex, rowIndex },
                 newValue: { indexColumn, indexInnerCell, indexRow },
               });
@@ -159,12 +154,12 @@ function SudokuPuzzle2() {
 
     // set value to the right place at the state.
     tempTable[rowIndex][columnIndex][innerCellIndex] = value;
-    setTable(tempTable);
+    setNumberGrid(tempTable);
   }
 
   return (
     <Stack direction="row" width="460px" flexWrap="wrap">
-      {cells.map((row, index1) =>
+      {cellStatus.map((row, index1) =>
         row.map((column, index2) => (
           <Stack
             key={`${index1}-${index2}`}
