@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Stack } from "@mui/material";
 
@@ -17,18 +17,59 @@ const initialTable: TTable = Array(3)
       .map(() => Array(9).fill("0"))
   );
 
+type TCells = { status: boolean }[][][];
+
+const initialCells: TCells = Array(3)
+  .fill(0)
+  .map(() =>
+    Array(3)
+      .fill(0)
+      .map(() => Array(9).fill({ status: true }))
+  );
+
 function SudokuPuzzle2() {
   /* -------------------------------------------------------------------------- */
   /*                                    State                                   */
   /* -------------------------------------------------------------------------- */
 
   const [table, setTable] = useState<TTable>(initialTable);
+  const [cells, setCells] = useState<TCells>(initialCells);
 
   // console.log("table", table);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
+
+  function handleShowError({
+    oldValue,
+    newValue,
+  }: {
+    oldValue: {
+      rowIndex: number;
+      columnIndex: number;
+      innerCellIndex: number;
+    };
+    newValue: {
+      indexRow: number;
+      indexColumn: number;
+      indexInnerCell: number;
+    };
+  }) {
+    const tempCells = cells;
+    tempCells[oldValue.rowIndex][oldValue.columnIndex][
+      oldValue.innerCellIndex
+    ] = {
+      status: false,
+    };
+    tempCells[newValue.indexRow][newValue.indexColumn][
+      newValue.indexInnerCell
+    ] = {
+      status: false,
+    };
+
+    setCells(tempCells);
+  }
 
   function setValueToTableCells(
     rowIndex: number,
@@ -42,58 +83,75 @@ function SudokuPuzzle2() {
 
     const tempTable = [...table];
 
-    // for find wrong number in inner cells
+    // To find wrong number in inner cells
     tempTable.forEach((row, indexRow) => {
       if (indexRow !== rowIndex) return;
 
       row.forEach((column, indexColumn) => {
         if (indexColumn !== columnIndex) return;
 
-        column.forEach((innerCell) => {
-          if (innerCell === value) console.log("wrong innerCell");
+        column.forEach((innerCell, indexInnerCell) => {
+          if (innerCell === value && value !== "0") {
+            handleShowError({
+              oldValue: { columnIndex, innerCellIndex, rowIndex },
+              newValue: { indexColumn, indexInnerCell, indexRow },
+            });
+          }
         });
       });
     });
 
-    // for find wrong number in columns
-    tempTable.forEach((row) => {
+    // To find wrong number in columns
+    tempTable.forEach((row, indexRow) => {
       row.forEach((column, indexColumn) => {
         if (indexColumn !== columnIndex) return;
 
         column.forEach((innerCell, indexInnerCell) => {
-          // console.log(innerCellIndex % 3);
-          if (innerCellIndex % 3 === indexInnerCell % 3 && innerCell === value)
-            console.log("wrong column");
+          if (
+            innerCellIndex % 3 === indexInnerCell % 3 &&
+            innerCell === value
+          ) {
+            handleShowError({
+              oldValue: { columnIndex, innerCellIndex, rowIndex },
+              newValue: { indexColumn, indexInnerCell, indexRow },
+            });
+          }
         });
       });
     });
 
-    // for find wrong number in rows
+    // To find wrong number in rows
     tempTable.forEach((row, indexRow) => {
       if (indexRow !== rowIndex) return;
 
-      row.forEach((column) => {
+      row.forEach((column, indexColumn) => {
         column.forEach((innerCell, indexInnerCell) => {
-          if (innerCellIndex < 3 && indexInnerCell < 3 && innerCell === value) {
-            console.log("Wrong row 1");
-          }
+          if (innerCell === value) {
+            if (innerCellIndex < 3 && indexInnerCell < 3) {
+              handleShowError({
+                oldValue: { columnIndex, innerCellIndex, rowIndex },
+                newValue: { indexColumn, indexInnerCell, indexRow },
+              });
+            }
 
-          if (
-            innerCellIndex < 6 &&
-            indexInnerCell < 6 &&
-            innerCellIndex >= 3 &&
-            indexInnerCell >= 3 &&
-            innerCell === value
-          ) {
-            console.log("Wrong row 2");
-          }
+            if (
+              innerCellIndex < 6 &&
+              indexInnerCell < 6 &&
+              innerCellIndex >= 3 &&
+              indexInnerCell >= 3
+            ) {
+              handleShowError({
+                oldValue: { columnIndex, innerCellIndex, rowIndex },
+                newValue: { indexColumn, indexInnerCell, indexRow },
+              });
+            }
 
-          if (
-            innerCellIndex >= 6 &&
-            indexInnerCell >= 6 &&
-            innerCell === value
-          ) {
-            console.log("Wrong row 3");
+            if (innerCellIndex >= 6 && indexInnerCell >= 6) {
+              handleShowError({
+                oldValue: { columnIndex, innerCellIndex, rowIndex },
+                newValue: { indexColumn, indexInnerCell, indexRow },
+              });
+            }
           }
         });
       });
@@ -106,38 +164,33 @@ function SudokuPuzzle2() {
 
   return (
     <Stack direction="row" width="460px" flexWrap="wrap">
-      {Array(3)
-        .fill(0)
-        .map((_, index1) =>
-          Array(3)
-            .fill(0)
-            .map((_, index2) => (
-              <Stack
-                key={`${index1}-${index2}`}
-                border="1px solid black"
-                flexWrap="wrap"
-                direction="row"
-                width="152px"
-              >
-                {Array(9)
-                  .fill(0)
-                  .map((_, index3) => (
-                    <PuzzleTextField
-                      key={`${index1}-${index2}-${index3}`}
-                      onChange={(event) => {
-                        limitToLastCharacter(event);
-                        setValueToTableCells(
-                          index1,
-                          index2,
-                          index3,
-                          event.target.value
-                        );
-                      }}
-                    />
-                  ))}
-              </Stack>
-            ))
-        )}
+      {cells.map((row, index1) =>
+        row.map((column, index2) => (
+          <Stack
+            key={`${index1}-${index2}`}
+            border="1px solid black"
+            flexWrap="wrap"
+            direction="row"
+            width="152px"
+          >
+            {column.map((innerCell, index3) => (
+              <PuzzleTextField
+                status={innerCell.status}
+                key={`${index1}-${index2}-${index3}`}
+                onChange={(event) => {
+                  limitToLastCharacter(event);
+                  setValueToTableCells(
+                    index1,
+                    index2,
+                    index3,
+                    event.target.value
+                  );
+                }}
+              />
+            ))}
+          </Stack>
+        ))
+      )}
     </Stack>
   );
 }

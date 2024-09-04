@@ -2,12 +2,16 @@ import { TextField, TextFieldProps } from "@mui/material";
 
 import limitToLastCharacter from "@/utils/limitToLastCharacter";
 
-function PuzzleTextField({ ...props }: TextFieldProps): JSX.Element {
+function PuzzleTextField({
+  status,
+  ...props
+}: { status: boolean } & TextFieldProps): JSX.Element {
   return (
     <TextField
       variant="outlined"
       onChange={(e) => limitToLastCharacter(e)}
       sx={{
+        bgcolor: status ? "" : "error.light",
         "& .MuiOutlinedInput-root": {
           "& input": {
             fontSize: "1.4rem",
