@@ -66,7 +66,15 @@ function SudokuPuzzle() {
     );
 
     // Helper function to validate cells and mark errors if necessary.
-    const validateCells = (grid: TNumberGrid, checkFn: Function) => {
+    const validateCells = (
+      grid: TNumberGrid,
+      checkFn: (
+        currentInnerCell: string,
+        indexRow: number,
+        indexColumn: number,
+        indexInnerCell: number
+      ) => boolean
+    ) => {
       grid.forEach((currentRow, indexRow) => {
         currentRow.forEach((currentColumn, indexColumn) => {
           currentColumn.forEach((currentInnerCell, indexInnerCell) => {
