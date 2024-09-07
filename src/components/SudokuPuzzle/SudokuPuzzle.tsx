@@ -73,17 +73,16 @@ function SudokuPuzzle() {
             if (
               checkFn(currentInnerCell, indexRow, indexColumn, indexInnerCell)
             ) {
-              // TODO: review this function later.
               markCellsAsError({
                 oldValue: {
-                  columnIndex: column,
-                  innerCellIndex: innerCell,
-                  rowIndex: row,
+                  columnIndex: indexColumn,
+                  innerCellIndex: indexInnerCell,
+                  rowIndex: indexRow,
                 },
                 newValue: {
-                  indexColumn: indexColumn,
-                  indexInnerCell: indexInnerCell,
-                  indexRow: indexRow,
+                  indexColumn: column,
+                  indexInnerCell: innerCell,
+                  indexRow: row,
                 },
               });
             }
