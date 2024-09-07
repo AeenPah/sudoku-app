@@ -38,7 +38,7 @@ function SudokuPuzzle() {
       indexInnerCell: number;
     };
   }): void {
-    const updatedCells = JSON.parse(JSON.stringify(cellStatus));
+    const updatedCells = cellStatus;
 
     updatedCells[rowIndex][columnIndex][innerCellIndex] = {
       status: false,
@@ -65,90 +65,74 @@ function SudokuPuzzle() {
       JSON.stringify(numberGrid)
     );
 
-    // Validate against rows to find duplicates and mark errors.
-    updatedNumberGrid.forEach((currentRow, rowIndex) => {
-      if (rowIndex !== row) return;
-
-      currentRow.forEach((currentColumn, ColumnIndex) => {
-        if (ColumnIndex !== column) return;
-
-        currentColumn.forEach((currentInnerCell, innerCellIndex) => {
-          if (currentInnerCell === inputValue && inputValue !== "0") {
-            markCellsAsError({
-              oldValue: {
-                columnIndex: column,
-                innerCellIndex: innerCell,
-                rowIndex: row,
-              },
-              newValue: {
-                indexColumn: ColumnIndex,
-                indexInnerCell: innerCellIndex,
-                indexRow: rowIndex,
-              },
-            });
-          }
+    // Helper function to validate cells and mark errors if necessary.
+    const validateCells = (grid: TNumberGrid, checkFn: Function) => {
+      grid.forEach((currentRow, indexRow) => {
+        currentRow.forEach((currentColumn, indexColumn) => {
+          currentColumn.forEach((currentInnerCell, indexInnerCell) => {
+            if (
+              checkFn(currentInnerCell, indexRow, indexColumn, indexInnerCell)
+            ) {
+              // TODO: review this function later.
+              markCellsAsError({
+                oldValue: {
+                  columnIndex: column,
+                  innerCellIndex: innerCell,
+                  rowIndex: row,
+                },
+                newValue: {
+                  indexColumn: indexColumn,
+                  indexInnerCell: indexInnerCell,
+                  indexRow: indexRow,
+                },
+              });
+            }
+          });
         });
       });
-    });
+    };
 
-    // To find wrong number in columns
-    updatedNumberGrid.forEach((currentRow, rowIndex) => {
-      currentRow.forEach((currentColumn, columnIndex) => {
-        if (columnIndex !== column) return;
+    /* --------------- Check for duplicates in the same box of 9*9 -------------- */
+    validateCells(
+      updatedNumberGrid,
+      (currentInnerCell: string, indexRow: number, indexColumn: number) =>
+        indexRow === row &&
+        indexColumn === column &&
+        currentInnerCell === inputValue
+    );
 
-        currentColumn.forEach((CurrentInnerCell, innerCellIndex) => {
-          if (
-            innerCell % 3 === innerCellIndex % 3 &&
-            CurrentInnerCell === inputValue
-          ) {
-            markCellsAsError({
-              oldValue: {
-                columnIndex: column,
-                innerCellIndex: innerCell,
-                rowIndex: row,
-              },
-              newValue: {
-                indexColumn: columnIndex,
-                indexInnerCell: innerCellIndex,
-                indexRow: rowIndex,
-              },
-            });
-          }
-        });
-      });
-    });
+    /* ----------------- Check for duplicates in the same column ---------------- */
+    validateCells(
+      updatedNumberGrid,
+      (
+        currentInnerCell: string,
+        _indexRow: number,
+        indexColumn: number,
+        indexInnerCell: number
+      ) =>
+        indexColumn === column &&
+        innerCell % 3 === indexInnerCell % 3 &&
+        currentInnerCell === inputValue
+    );
 
-    // To find wrong number in rows
-    updatedNumberGrid.forEach((currentRow, rowIndex) => {
-      if (rowIndex !== row) return;
-
-      currentRow.forEach((currentColumn, columnIndex) => {
-        currentColumn.forEach((currentInnerCell, innerCellIndex) => {
-          if (
-            currentInnerCell === inputValue &&
-            ((innerCell < 3 && innerCellIndex < 3) ||
-              (innerCell >= 3 &&
-                innerCell < 6 &&
-                innerCellIndex >= 3 &&
-                innerCellIndex < 6) ||
-              (innerCell >= 6 && innerCellIndex >= 6))
-          ) {
-            markCellsAsError({
-              oldValue: {
-                columnIndex: column,
-                innerCellIndex: innerCell,
-                rowIndex: row,
-              },
-              newValue: {
-                indexColumn: columnIndex,
-                indexInnerCell: innerCellIndex,
-                indexRow: rowIndex,
-              },
-            });
-          }
-        });
-      });
-    });
+    /* ------------------ Check for duplicates in the same row ------------------ */
+    validateCells(
+      updatedNumberGrid,
+      (
+        currentInnerCell: string,
+        indexRow: number,
+        _indexColumn: number,
+        indexInnerCell: number
+      ) =>
+        indexRow === row &&
+        currentInnerCell === inputValue &&
+        ((innerCell < 3 && indexInnerCell < 3) ||
+          (innerCell >= 3 &&
+            innerCell < 6 &&
+            indexInnerCell >= 3 &&
+            indexInnerCell < 6) ||
+          (innerCell >= 6 && indexInnerCell >= 6))
+    );
 
     // set value to the right place at the state.
     updatedNumberGrid[row][column][innerCell] = inputValue;
