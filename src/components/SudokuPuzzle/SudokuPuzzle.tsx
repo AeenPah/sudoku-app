@@ -23,21 +23,20 @@ function SudokuPuzzle() {
   /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
 
-  function markCellsAsError({
-    oldValue: { rowIndex, columnIndex, innerCellIndex },
-    newValue: { indexRow, indexColumn, indexInnerCell },
-  }: {
+  function markCellsAsError(
     oldValue: {
       rowIndex: number;
       columnIndex: number;
       innerCellIndex: number;
-    };
+    },
     newValue: {
       indexRow: number;
       indexColumn: number;
       indexInnerCell: number;
-    };
-  }): void {
+    }
+  ): void {
+    const { indexColumn, indexInnerCell, indexRow } = newValue;
+    const { columnIndex, innerCellIndex, rowIndex } = oldValue;
     const updatedCells = cellStatus;
 
     updatedCells[rowIndex][columnIndex][innerCellIndex] = {
@@ -81,18 +80,18 @@ function SudokuPuzzle() {
             if (
               checkFn(currentInnerCell, indexRow, indexColumn, indexInnerCell)
             ) {
-              markCellsAsError({
-                oldValue: {
-                  columnIndex: indexColumn,
-                  innerCellIndex: indexInnerCell,
-                  rowIndex: indexRow,
-                },
-                newValue: {
-                  indexColumn: column,
-                  indexInnerCell: innerCell,
-                  indexRow: row,
-                },
-              });
+              const oldValue = {
+                columnIndex: indexColumn,
+                innerCellIndex: indexInnerCell,
+                rowIndex: indexRow,
+              };
+              const newValue = {
+                indexColumn: column,
+                indexInnerCell: innerCell,
+                indexRow: row,
+              };
+
+              markCellsAsError(oldValue, newValue);
             }
           });
         });
