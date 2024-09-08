@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Stack } from "@mui/material";
 
-import limitToLastCharacter from "@/utils/limitToLastCharacter";
+import restrictToSingleDigit from "@/utils/restrictToSingleDigit";
 
 import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 
@@ -161,7 +161,7 @@ function SudokuPuzzle() {
                 status={innerCell.status}
                 key={`${index1}-${index2}-${index3}`}
                 onChange={(event) => {
-                  limitToLastCharacter(event);
+                  restrictToSingleDigit(event);
                   validateAndSetCellValue(
                     index1,
                     index2,
