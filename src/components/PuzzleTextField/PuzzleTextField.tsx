@@ -1,7 +1,5 @@
 import { TextField, TextFieldProps } from "@mui/material";
 
-import limitToLastCharacter from "@/utils/limitToLastCharacter";
-
 function PuzzleTextField({
   status,
   ...props
@@ -9,7 +7,6 @@ function PuzzleTextField({
   return (
     <TextField
       variant="outlined"
-      onChange={(e) => limitToLastCharacter(e)}
       sx={{
         bgcolor: status ? "" : "error.light",
         "& .MuiOutlinedInput-root": {
