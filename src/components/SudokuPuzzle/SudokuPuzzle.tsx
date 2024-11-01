@@ -20,6 +20,54 @@ function SudokuPuzzle() {
   const [cellStatus, setCellStatus] = useState<TCellStatus>(initialCellStatus);
 
   /* -------------------------------------------------------------------------- */
+  /*                                  Constants                                 */
+  /* -------------------------------------------------------------------------- */
+
+  const sameBox = (
+    row: number,
+    column: number,
+    _cell: number,
+    rowIndex: number,
+    columnIndex: number,
+    _cellIndex: number
+  ) => row === rowIndex && column === columnIndex;
+  const sameColumn = (
+    _row: number,
+    column: number,
+    cell: number,
+    _rowIndex: number,
+    columnIndex: number,
+    cellIndex: number
+  ) => column === columnIndex && cell % 3 === cellIndex % 3;
+  const sameRow = (
+    row: number,
+    _column: number,
+    cell: number,
+    rowIndex: number,
+    _columnIndex: number,
+    cellIndex: number
+  ) =>
+    row === rowIndex &&
+    ((cell < 3 && cellIndex < 3) ||
+      (cell >= 3 && cell < 6 && cellIndex >= 3 && cellIndex < 6) ||
+      (cell >= 6 && cellIndex >= 6));
+
+  const validationRules = [
+    {
+      checkFn: sameBox,
+      name: "Box",
+    },
+    {
+      checkFn: sameColumn,
+      name: "Column",
+    },
+    {
+      checkFn: sameRow,
+      name: "Row",
+    },
+  ];
+
+  /* -------------------------------------------------------------------------- */
   /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
 
@@ -63,114 +111,69 @@ function SudokuPuzzle() {
     });
   }
 
-  function validateAndUpdateCell(
+  function checkForDuplicates(
     row: number,
     column: number,
-    innerCell: number,
-    inputValue: string,
-    clearErrors: boolean
-  ): void {
-    if (!inputValue) return;
+    cell: number,
+    inputValue: string
+  ): boolean {
+    const updatedGrid: TNumberGrid = JSON.parse(JSON.stringify(numberGrid));
+    const errorCells: {
+      rowIndex: number;
+      columnIndex: number;
+      cellIndex: number;
+    }[] = [];
 
-    let isThisCellWrong = false;
-    const thisCellStatus = cellStatus[row][column][innerCell];
-
-    // Create a deep copy of the current grid state to avoid direct mutation.
-    const updatedNumberGrid: TNumberGrid = JSON.parse(
-      JSON.stringify(numberGrid)
-    );
-
-    // Helper function to validate cells and mark errors if necessary.
-    const validateCells = (
-      grid: TNumberGrid,
-      checkFn: (
-        currentInnerCell: string,
-        indexRow: number,
-        indexColumn: number,
-        indexInnerCell: number
-      ) => boolean
-    ) => {
-      grid.forEach((currentRow, indexRow) => {
-        currentRow.forEach((currentColumn, indexColumn) => {
-          currentColumn.forEach((currentInnerCell, indexInnerCell) => {
+    validationRules.forEach(({ checkFn }) => {
+      updatedGrid.forEach((r, rowIndex) =>
+        r.forEach((c, columnIndex) =>
+          c.forEach((ce, cellIndex) => {
             // avoid check cell with its own cell value
             if (
-              row === indexRow &&
-              column === indexColumn &&
-              innerCell === indexInnerCell
+              row === rowIndex &&
+              column === columnIndex &&
+              cell === cellIndex
             )
               return;
 
             if (
-              checkFn(currentInnerCell, indexRow, indexColumn, indexInnerCell)
+              checkFn(row, column, cell, rowIndex, columnIndex, cellIndex) &&
+              ce === inputValue
             ) {
-              updateCellStatus(indexRow, indexColumn, indexInnerCell, true);
-              updateCellStatus(row, column, innerCell, true);
-
-              isThisCellWrong = true;
+              errorCells.push({ rowIndex, columnIndex, cellIndex });
             }
-          });
-        });
-      });
-    };
+          })
+        )
+      );
+    });
 
-    /* --------------- Check for duplicates in the same box of 9*9 -------------- */
-    validateCells(
-      updatedNumberGrid,
-      (currentInnerCell: string, indexRow: number, indexColumn: number) =>
-        indexRow === row &&
-        indexColumn === column &&
-        currentInnerCell === inputValue
+    errorCells.forEach(({ rowIndex, columnIndex, cellIndex }) =>
+      updateCellStatus(rowIndex, columnIndex, cellIndex, true)
     );
 
-    /* ----------------- Check for duplicates in the same column ---------------- */
-    validateCells(
-      updatedNumberGrid,
-      (
-        currentInnerCell: string,
-        _indexRow: number,
-        indexColumn: number,
-        indexInnerCell: number
-      ) =>
-        indexColumn === column &&
-        innerCell % 3 === indexInnerCell % 3 &&
-        currentInnerCell === inputValue
-    );
+    return errorCells.length > 0;
+  }
 
-    /* ------------------ Check for duplicates in the same row ------------------ */
-    validateCells(
-      updatedNumberGrid,
-      (
-        currentInnerCell: string,
-        indexRow: number,
-        _indexColumn: number,
-        indexInnerCell: number
-      ) =>
-        indexRow === row &&
-        currentInnerCell === inputValue &&
-        ((innerCell < 3 && indexInnerCell < 3) ||
-          (innerCell >= 3 &&
-            innerCell < 6 &&
-            indexInnerCell >= 3 &&
-            indexInnerCell < 6) ||
-          (innerCell >= 6 && indexInnerCell >= 6))
-    );
+  function validateAndUpdateCell(
+    row: number,
+    column: number,
+    cell: number,
+    value: string,
+    clearErrors: boolean
+  ): void {
+    if (!value) return;
+
+    const hasError = checkForDuplicates(row, column, cell, value);
 
     // set value to the right place at the state.
     setNumberGrid((prev) => {
-      prev[row][column][innerCell] = inputValue;
+      prev[row][column][cell] = value;
 
       return [...prev];
     });
 
-    // Reset cell color if it is not wrong
-    if (!isThisCellWrong && !thisCellStatus.status) {
-      updateCellStatus(row, column, innerCell, false);
-    }
-
-    if (clearErrors) {
-      refreshInvalidCells();
-    }
+    updateCellStatus(row, column, cell, hasError);
+    if (clearErrors) refreshInvalidCells();
   }
 
   return (
