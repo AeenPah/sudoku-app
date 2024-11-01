@@ -23,12 +23,12 @@ function SudokuPuzzle() {
   /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
 
-  const updateCellStatus = (
+  function updateCellStatus(
     row: number,
     column: number,
     innerCell: number,
     hasError: boolean
-  ) => {
+  ): void {
     const updatedCells = cellStatus;
 
     updatedCells[row][column][innerCell] = {
@@ -36,9 +36,9 @@ function SudokuPuzzle() {
     };
 
     setCellStatus(updatedCells);
-  };
+  }
 
-  function refreshInvalidCells() {
+  function refreshInvalidCells(): void {
     const errorCells = cellStatus.flatMap((row, rowIndex) =>
       row.flatMap((column, columnIndex) =>
         column
