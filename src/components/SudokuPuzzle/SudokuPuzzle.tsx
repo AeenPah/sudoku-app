@@ -53,11 +53,14 @@ function SudokuPuzzle() {
     row: number,
     column: number,
     innerCell: number,
-    inputValue: string
+    inputValue: string,
+    bool: boolean
   ): void {
     if (!inputValue) return;
 
-    // console.log("handleOnChange", rowIndex, columnIndex, innerCellIndex, value);
+    let isThisCellWrong = false;
+    const thisCellStatus = cellStatus[row][column][innerCell];
+    const wrongCellArray: [number, number, number][] = [];
 
     // Create a deep copy of the current grid state to avoid direct mutation.
     const updatedNumberGrid: TNumberGrid = JSON.parse(
@@ -77,6 +80,14 @@ function SudokuPuzzle() {
       grid.forEach((currentRow, indexRow) => {
         currentRow.forEach((currentColumn, indexColumn) => {
           currentColumn.forEach((currentInnerCell, indexInnerCell) => {
+            // avoid check cell with its own cell value
+            if (
+              row === indexRow &&
+              column === indexColumn &&
+              innerCell === indexInnerCell
+            )
+              return;
+
             if (
               checkFn(currentInnerCell, indexRow, indexColumn, indexInnerCell)
             ) {
@@ -92,6 +103,10 @@ function SudokuPuzzle() {
               };
 
               markCellsAsError(oldValue, newValue);
+
+              wrongCellArray.push([indexRow, indexColumn, indexInnerCell]);
+
+              isThisCellWrong = true;
             }
           });
         });
@@ -141,8 +156,47 @@ function SudokuPuzzle() {
     );
 
     // set value to the right place at the state.
-    updatedNumberGrid[row][column][innerCell] = inputValue;
-    setNumberGrid(updatedNumberGrid);
+    setNumberGrid((prev) => {
+      prev[row][column][innerCell] = inputValue;
+
+      return [...prev];
+    });
+
+    // Reset cell color if it is not wrong
+    if (!isThisCellWrong && !thisCellStatus.status) {
+      const tempCellStatus = cellStatus;
+      tempCellStatus[row][column][innerCell] = { status: true };
+      setCellStatus(tempCellStatus);
+    }
+
+    if (bool) {
+      unwatchWrongCells();
+    }
+  }
+
+  function unwatchWrongCells() {
+    const item: [number, number, number][] = [];
+    cellStatus.forEach((row, indexRow) =>
+      row.forEach((column, indexColumn) =>
+        column.forEach((innerCell, indexInnerCell) => {
+          if (!innerCell.status) {
+            item.push([indexRow, indexColumn, indexInnerCell]);
+          }
+        })
+      )
+    );
+
+    if (item.length > 0) {
+      item.forEach(([indexRow, indexColumn, indexInnerCell]) => {
+        validateAndSetCellValue(
+          indexRow,
+          indexColumn,
+          indexInnerCell,
+          numberGrid[indexRow][indexColumn][indexInnerCell],
+          false
+        );
+      });
+    }
   }
 
   return (
@@ -166,7 +220,8 @@ function SudokuPuzzle() {
                     index1,
                     index2,
                     index3,
-                    event.target.value
+                    event.target.value,
+                    true
                   );
                 }}
               />
