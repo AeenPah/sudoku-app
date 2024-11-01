@@ -23,44 +23,57 @@ function SudokuPuzzle() {
   /*                                  Functions                                 */
   /* -------------------------------------------------------------------------- */
 
-  function markCellsAsError(
-    oldValue: {
-      rowIndex: number;
-      columnIndex: number;
-      innerCellIndex: number;
-    },
-    newValue: {
-      indexRow: number;
-      indexColumn: number;
-      indexInnerCell: number;
-    }
-  ): void {
-    const { indexColumn, indexInnerCell, indexRow } = newValue;
-    const { columnIndex, innerCellIndex, rowIndex } = oldValue;
+  const updateCellStatus = (
+    row: number,
+    column: number,
+    innerCell: number,
+    hasError: boolean
+  ) => {
     const updatedCells = cellStatus;
 
-    updatedCells[rowIndex][columnIndex][innerCellIndex] = {
-      status: false,
-    };
-    updatedCells[indexRow][indexColumn][indexInnerCell] = {
-      status: false,
+    updatedCells[row][column][innerCell] = {
+      status: !hasError,
     };
 
     setCellStatus(updatedCells);
+  };
+
+  function refreshInvalidCells() {
+    const errorCells = cellStatus.flatMap((row, rowIndex) =>
+      row.flatMap((column, columnIndex) =>
+        column
+          .map((innerCell, innerCellIndex) => ({
+            rowIndex,
+            columnIndex,
+            innerCellIndex,
+            isError: !innerCell.status,
+          }))
+          .filter((cell) => cell.isError)
+      )
+    );
+
+    errorCells.forEach(({ rowIndex, columnIndex, innerCellIndex }) => {
+      validateAndUpdateCell(
+        rowIndex,
+        columnIndex,
+        innerCellIndex,
+        numberGrid[rowIndex][columnIndex][innerCellIndex],
+        false
+      );
+    });
   }
 
-  function validateAndSetCellValue(
+  function validateAndUpdateCell(
     row: number,
     column: number,
     innerCell: number,
     inputValue: string,
-    bool: boolean
+    clearErrors: boolean
   ): void {
     if (!inputValue) return;
 
     let isThisCellWrong = false;
     const thisCellStatus = cellStatus[row][column][innerCell];
-    const wrongCellArray: [number, number, number][] = [];
 
     // Create a deep copy of the current grid state to avoid direct mutation.
     const updatedNumberGrid: TNumberGrid = JSON.parse(
@@ -91,20 +104,8 @@ function SudokuPuzzle() {
             if (
               checkFn(currentInnerCell, indexRow, indexColumn, indexInnerCell)
             ) {
-              const oldValue = {
-                columnIndex: indexColumn,
-                innerCellIndex: indexInnerCell,
-                rowIndex: indexRow,
-              };
-              const newValue = {
-                indexColumn: column,
-                indexInnerCell: innerCell,
-                indexRow: row,
-              };
-
-              markCellsAsError(oldValue, newValue);
-
-              wrongCellArray.push([indexRow, indexColumn, indexInnerCell]);
+              updateCellStatus(indexRow, indexColumn, indexInnerCell, true);
+              updateCellStatus(row, column, innerCell, true);
 
               isThisCellWrong = true;
             }
@@ -164,62 +165,35 @@ function SudokuPuzzle() {
 
     // Reset cell color if it is not wrong
     if (!isThisCellWrong && !thisCellStatus.status) {
-      const tempCellStatus = cellStatus;
-      tempCellStatus[row][column][innerCell] = { status: true };
-      setCellStatus(tempCellStatus);
+      updateCellStatus(row, column, innerCell, false);
     }
 
-    if (bool) {
-      unwatchWrongCells();
-    }
-  }
-
-  function unwatchWrongCells() {
-    const item: [number, number, number][] = [];
-    cellStatus.forEach((row, indexRow) =>
-      row.forEach((column, indexColumn) =>
-        column.forEach((innerCell, indexInnerCell) => {
-          if (!innerCell.status) {
-            item.push([indexRow, indexColumn, indexInnerCell]);
-          }
-        })
-      )
-    );
-
-    if (item.length > 0) {
-      item.forEach(([indexRow, indexColumn, indexInnerCell]) => {
-        validateAndSetCellValue(
-          indexRow,
-          indexColumn,
-          indexInnerCell,
-          numberGrid[indexRow][indexColumn][indexInnerCell],
-          false
-        );
-      });
+    if (clearErrors) {
+      refreshInvalidCells();
     }
   }
 
   return (
     <Stack direction="row" width="460px" flexWrap="wrap">
-      {cellStatus.map((row, index1) =>
-        row.map((column, index2) => (
+      {cellStatus.map((row, indexRow) =>
+        row.map((column, indexColumn) => (
           <Stack
-            key={`${index1}-${index2}`}
+            key={`${indexRow}-${indexColumn}`}
             border="1px solid black"
             flexWrap="wrap"
             direction="row"
             width="152px"
           >
-            {column.map((innerCell, index3) => (
+            {column.map((innerCell, indexInnerCell) => (
               <PuzzleTextField
                 status={innerCell.status}
-                key={`${index1}-${index2}-${index3}`}
+                key={`${indexRow}-${indexColumn}-${indexInnerCell}`}
                 onChange={(event) => {
                   restrictToSingleDigit(event);
-                  validateAndSetCellValue(
-                    index1,
-                    index2,
-                    index3,
+                  validateAndUpdateCell(
+                    indexRow,
+                    indexColumn,
+                    indexInnerCell,
                     event.target.value,
                     true
                   );
