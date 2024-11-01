@@ -2,70 +2,26 @@
 
 import { useState } from "react";
 
-import { Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 
 import restrictToSingleDigit from "@/utils/restrictToSingleDigit";
 
 import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 
+import {
+  initialCellStatus,
+  initialNumberGrid,
+  validationRules,
+} from "./SudokuPuzzle.const";
 import { TCellStatus, TNumberGrid } from "./SudokuPuzzle.type";
-import { initialCellStatus, initialNumberGrid } from "./SudokuPuzzle.const";
 
-function SudokuPuzzle() {
+function SudokuPuzzle(): JSX.Element {
   /* -------------------------------------------------------------------------- */
-  /*                                    State                                   */
+  /*                                    States                                  */
   /* -------------------------------------------------------------------------- */
 
   const [numberGrid, setNumberGrid] = useState<TNumberGrid>(initialNumberGrid);
   const [cellStatus, setCellStatus] = useState<TCellStatus>(initialCellStatus);
-
-  /* -------------------------------------------------------------------------- */
-  /*                                  Constants                                 */
-  /* -------------------------------------------------------------------------- */
-
-  const sameBox = (
-    row: number,
-    column: number,
-    _cell: number,
-    rowIndex: number,
-    columnIndex: number,
-    _cellIndex: number
-  ) => row === rowIndex && column === columnIndex;
-  const sameColumn = (
-    _row: number,
-    column: number,
-    cell: number,
-    _rowIndex: number,
-    columnIndex: number,
-    cellIndex: number
-  ) => column === columnIndex && cell % 3 === cellIndex % 3;
-  const sameRow = (
-    row: number,
-    _column: number,
-    cell: number,
-    rowIndex: number,
-    _columnIndex: number,
-    cellIndex: number
-  ) =>
-    row === rowIndex &&
-    ((cell < 3 && cellIndex < 3) ||
-      (cell >= 3 && cell < 6 && cellIndex >= 3 && cellIndex < 6) ||
-      (cell >= 6 && cellIndex >= 6));
-
-  const validationRules = [
-    {
-      checkFn: sameBox,
-      name: "Box",
-    },
-    {
-      checkFn: sameColumn,
-      name: "Column",
-    },
-    {
-      checkFn: sameRow,
-      name: "Row",
-    },
-  ];
 
   /* -------------------------------------------------------------------------- */
   /*                                  Functions                                 */
@@ -206,6 +162,11 @@ function SudokuPuzzle() {
           </Stack>
         ))
       )}
+
+      <Stack justifyContent="center" width={1} direction="row" gap={2} my={2}>
+        <Button>Done</Button>
+        <Button>Reset</Button>
+      </Stack>
     </Stack>
   );
 }
