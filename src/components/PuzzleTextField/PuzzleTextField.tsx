@@ -1,11 +1,15 @@
 import { TextField, TextFieldProps } from "@mui/material";
 
+import { TCellStatus } from "../SudokuPuzzle/SudokuPuzzle.type";
+
 function PuzzleTextField({
   status,
+  changeable,
   ...props
-}: { status: boolean } & TextFieldProps): JSX.Element {
+}: TCellStatus & TextFieldProps): JSX.Element {
   return (
     <TextField
+      disabled={!changeable}
       variant="outlined"
       sx={{
         bgcolor: status ? "" : "error.light",

@@ -1,4 +1,4 @@
-import { TCellStatus, TNumberGrid } from "./SudokuPuzzle.type";
+import { TCellStatusList, TNumberGrid } from "./SudokuPuzzle.type";
 
 /* -------------------------------------------------------------------------- */
 /*                                  Initials                                  */
@@ -12,7 +12,7 @@ export const initialNumberGrid: TNumberGrid = Array(3)
       .map(() => Array(9).fill(""))
   );
 
-export const initialCellStatus: TCellStatus = Array(3)
+export const initialCellStatus: TCellStatusList = Array(3)
   .fill(0)
   .map(() =>
     Array(3)
@@ -66,4 +66,46 @@ export const validationRules = [
     checkFn: sameRow,
     name: "Row",
   },
+];
+
+type TAnswer = [number, number, number, string][];
+export const answer: TAnswer = [
+  [0, 0, 0, "9"],
+  [0, 0, 3, "6"],
+  [0, 0, 7, "2"],
+  [0, 1, 0, "3"],
+  [0, 1, 1, "4"],
+  [0, 1, 5, "7"],
+  [0, 1, 6, "5"],
+  [0, 2, 0, "6"],
+  [0, 2, 5, "4"],
+  [0, 2, 7, "1"],
+  [0, 2, 8, "3"],
+  [1, 0, 0, "7"],
+  [1, 0, 5, "8"],
+  [1, 0, 6, "1"],
+  [1, 0, 7, "3"],
+  [1, 1, 2, "9"],
+  [1, 1, 3, "7"],
+  [1, 1, 4, "3"],
+  [1, 2, 0, "5"],
+  [1, 2, 2, "8"],
+  [1, 2, 4, "6"],
+  [1, 2, 5, "2"],
+  [1, 2, 6, "4"],
+  [1, 2, 7, "7"],
+  [2, 0, 0, "3"],
+  [2, 0, 1, "4"],
+  [2, 0, 5, "6"],
+  [2, 0, 6, "8"],
+  [2, 0, 7, "7"],
+  [2, 0, 8, "1"],
+  [2, 1, 1, "5"],
+  [2, 1, 2, "1"],
+  [2, 1, 7, "2"],
+  [2, 2, 0, "7"],
+  [2, 2, 3, "8"],
+  [2, 2, 4, "9"],
+  [2, 2, 5, "1"],
+  [2, 2, 7, "4"],
 ];

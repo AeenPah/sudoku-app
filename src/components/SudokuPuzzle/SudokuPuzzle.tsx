@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, Stack } from "@mui/material";
 
@@ -9,19 +9,37 @@ import restrictToSingleDigit from "@/utils/restrictToSingleDigit";
 import PuzzleTextField from "../PuzzleTextField/PuzzleTextField";
 
 import {
+  answer,
   initialCellStatus,
   initialNumberGrid,
   validationRules,
 } from "./SudokuPuzzle.const";
-import { TCellStatus, TNumberGrid } from "./SudokuPuzzle.type";
+import { TCellStatusList, TNumberGrid } from "./SudokuPuzzle.type";
 
 function SudokuPuzzle(): JSX.Element {
   /* -------------------------------------------------------------------------- */
   /*                                    States                                  */
   /* -------------------------------------------------------------------------- */
 
+  answer.forEach((item) => {
+    initialNumberGrid[item[0]][item[1]][item[2]] = item[3];
+    initialCellStatus[item[0]][item[1]][item[2]] = {
+      status: true,
+      changeable: false,
+    };
+  });
+
   const [numberGrid, setNumberGrid] = useState<TNumberGrid>(initialNumberGrid);
-  const [cellStatus, setCellStatus] = useState<TCellStatus>(initialCellStatus);
+  const [cellStatus, setCellStatus] =
+    useState<TCellStatusList>(initialCellStatus);
+
+  /* -------------------------------------------------------------------------- */
+  /*                                   Effect                                   */
+  /* -------------------------------------------------------------------------- */
+
+  useEffect(() => {
+    // setNumberGrid(initialNumberGrid);
+  }, []);
 
   /* -------------------------------------------------------------------------- */
   /*                                  Functions                                 */
@@ -36,6 +54,7 @@ function SudokuPuzzle(): JSX.Element {
     const updatedCells = cellStatus;
 
     updatedCells[row][column][innerCell] = {
+      ...updatedCells[row][column][innerCell],
       status: !hasError,
     };
 
@@ -145,7 +164,9 @@ function SudokuPuzzle(): JSX.Element {
           >
             {column.map((innerCell, indexInnerCell) => (
               <PuzzleTextField
+                changeable={innerCell.changeable}
                 status={innerCell.status}
+                value={numberGrid[indexRow][indexColumn][indexInnerCell]}
                 key={`${indexRow}-${indexColumn}-${indexInnerCell}`}
                 onChange={(event) => {
                   restrictToSingleDigit(event);
@@ -164,8 +185,8 @@ function SudokuPuzzle(): JSX.Element {
       )}
 
       <Stack justifyContent="center" width={1} direction="row" gap={2} my={2}>
-        <Button>Done</Button>
-        <Button>Reset</Button>
+        <Button onClick={() => console.log(numberGrid)}>Done</Button>
+        <Button onClick={() => window.location.reload()}>Reset</Button>
       </Stack>
     </Stack>
   );
