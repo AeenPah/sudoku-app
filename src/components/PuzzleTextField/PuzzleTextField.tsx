@@ -9,13 +9,14 @@ function PuzzleTextField({
 }: TCellStatus & TextFieldProps): JSX.Element {
   return (
     <TextField
-      disabled={!changeable}
+      disabled={changeable}
       variant="outlined"
       sx={{
         bgcolor: status ? "" : "error.light",
         "& .MuiOutlinedInput-root": {
           "& input": {
-            fontSize: "1.4rem",
+            fontSize: changeable ? "2.4rem" : "2rem",
+            fontWeight: changeable ? 600 : 200,
             height: 50,
             padding: 0,
             textAlign: "center",

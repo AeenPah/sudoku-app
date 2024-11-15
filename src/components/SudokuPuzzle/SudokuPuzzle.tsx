@@ -21,14 +21,6 @@ function SudokuPuzzle(): JSX.Element {
   /*                                    States                                  */
   /* -------------------------------------------------------------------------- */
 
-  answer.forEach((item) => {
-    initialNumberGrid[item[0]][item[1]][item[2]] = item[3];
-    initialCellStatus[item[0]][item[1]][item[2]] = {
-      status: true,
-      changeable: false,
-    };
-  });
-
   const [numberGrid, setNumberGrid] = useState<TNumberGrid>(initialNumberGrid);
   const [cellStatus, setCellStatus] =
     useState<TCellStatusList>(initialCellStatus);
@@ -37,8 +29,23 @@ function SudokuPuzzle(): JSX.Element {
   /*                                   Effect                                   */
   /* -------------------------------------------------------------------------- */
 
+  // TODO: May change this by update states
   useEffect(() => {
-    // setNumberGrid(initialNumberGrid);
+    const tempCellStatus = cellStatus;
+    answer.forEach((item) => {
+      tempCellStatus[item[0]][item[1]][item[2]] = {
+        status: true,
+        changeable: true,
+      };
+
+      setNumberGrid((prev) => {
+        prev[item[0]][item[1]][item[2]] = item[3];
+
+        return [...prev];
+      });
+    });
+
+    setCellStatus(tempCellStatus);
   }, []);
 
   /* -------------------------------------------------------------------------- */
